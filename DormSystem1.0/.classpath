@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="jar_add/commons-dbutils-1.6.jar"/>
+	<classpathentry kind="lib" path="jar_add/javax.xml.bind.jar"/>
+	<classpathentry kind="lib" path="jar_add/sqljdbc42.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
