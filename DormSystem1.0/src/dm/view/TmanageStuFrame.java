@@ -535,8 +535,16 @@ public class TmanageStuFrame extends javax.swing.JInternalFrame {
     private void btnScinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnScinActionPerformed
         String startDate = this.startDate.getText();
         String endDate = this.endDate.getText();
-        List<tManageStu> list6 = sbiz.findByScin(startDate, endDate);
-        showOnTable(list6);
+        java.sql.Date date = java.sql.Date.valueOf(startDate);
+        java.sql.Date date1 = java.sql.Date.valueOf(endDate);
+        if(date1.getTime()<date.getTime()) {
+		JOptionPane.showMessageDialog(this, "时间区间不对！");
+	}
+        else {
+            List<tManageStu> list6 = sbiz.findByScin(startDate, endDate);
+            showOnTable(list6);
+        }
+        
     }//GEN-LAST:event_btnScinActionPerformed
     //表2鼠标点击事件
     private void tabDormitoryMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabDormitoryMouseClicked
