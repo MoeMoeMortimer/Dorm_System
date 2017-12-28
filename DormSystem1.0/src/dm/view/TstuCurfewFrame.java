@@ -5,18 +5,49 @@
  */
 package dm.view;
 
+import static com.sun.org.apache.xalan.internal.lib.ExsltDatetime.date;
+import static com.sun.org.apache.xalan.internal.lib.ExsltDatetime.date;
+import static com.sun.org.apache.xalan.internal.lib.ExsltDatetime.date;
+import dm.biz.TeacherBiz;
+import dm.biz.TeacherBizImpl;
+import dm.biz.tStuCurfewBiz;
+import dm.biz.tStuCurfewBizImpl;
+import dm.po.Teacher;
+import dm.po.User;
+import dm.util.LocationUtil;
+import dm.util.StringUtil;
+import dm.vo.tStuCurfew;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author 28104
  */
 public class TstuCurfewFrame extends javax.swing.JInternalFrame {
+    static User u;
+    TeacherBiz tbiz = new TeacherBizImpl();
+    Teacher t = tbiz.findById(u.getUno());
+    tStuCurfewBiz sbiz = new tStuCurfewBizImpl();
 
     /**
      * Creates new form TstuCurfewFrame
      */
     public TstuCurfewFrame() {
         initComponents();
+        //初始化批准按钮
+        this.btnSave.setEnabled(false);
+        LocationUtil.setScreenCenter(this);
     }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -29,11 +60,10 @@ public class TstuCurfewFrame extends javax.swing.JInternalFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblCurfew = new javax.swing.JTable();
         cobCondition = new javax.swing.JComboBox();
         btnLoad = new javax.swing.JButton();
         btnSave = new javax.swing.JButton();
-        btnCancel = new javax.swing.JButton();
         btnQuit = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         txtSno = new javax.swing.JTextField();
@@ -47,31 +77,62 @@ public class TstuCurfewFrame extends javax.swing.JInternalFrame {
         txtNightReason = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         txtTno = new javax.swing.JTextField();
+        txtCondition = new javax.swing.JTextField();
+        btnSearch = new javax.swing.JButton();
+        btnUnpermit = new javax.swing.JButton();
+        btnPermit = new javax.swing.JButton();
 
         setClosable(true);
         setIconifiable(true);
         setMaximizable(true);
         setResizable(true);
+        setTitle("学生晚归信息处理");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblCurfew.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
                 "学号", "姓名", "宿舍号", "晚归时间", "晚归原因", "教师号"
             }
-        ));
-        jScrollPane1.setViewportView(jTable1);
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
 
-        cobCondition.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "全部", "已批准", "未批准" }));
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblCurfew.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblCurfewMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tblCurfew);
 
-        btnLoad.setText("载入");
+        cobCondition.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "按学号", "按姓名", "按宿舍号", "按教师号", "模糊查询" }));
+
+        btnLoad.setText("全部载入");
+        btnLoad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLoadActionPerformed(evt);
+            }
+        });
 
         btnSave.setText("批准");
-
-        btnCancel.setText("取消");
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveActionPerformed(evt);
+            }
+        });
 
         btnQuit.setText("退出");
+        btnQuit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnQuitActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("学号：");
 
@@ -100,6 +161,29 @@ public class TstuCurfewFrame extends javax.swing.JInternalFrame {
 
         jLabel6.setText("教师号：");
 
+        txtTno.setEditable(false);
+
+        btnSearch.setText("查询");
+        btnSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearchActionPerformed(evt);
+            }
+        });
+
+        btnUnpermit.setText("未批准");
+        btnUnpermit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUnpermitActionPerformed(evt);
+            }
+        });
+
+        btnPermit.setText("已批准");
+        btnPermit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPermitActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -109,54 +193,66 @@ public class TstuCurfewFrame extends javax.swing.JInternalFrame {
                 .addGap(23, 23, 23)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtNightReason, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(51, 51, 51)
-                        .addComponent(jLabel6)
-                        .addGap(18, 18, 18)
-                        .addComponent(txtTno, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtSno, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(50, 50, 50)
+                        .addComponent(txtSno, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtSname, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtSname, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtDno, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtNightTime)
+                        .addGap(8, 8, 8))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel5)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(txtNightReason, javax.swing.GroupLayout.PREFERRED_SIZE, 298, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(47, 47, 47))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(btnLoad)
+                                .addGap(29, 29, 29)
+                                .addComponent(btnPermit)
+                                .addGap(4, 4, 4)))
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                        .addComponent(cobCondition, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(69, 69, 69))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                        .addComponent(btnLoad)
-                                        .addGap(30, 30, 30)
-                                        .addComponent(btnSave)
-                                        .addGap(27, 27, 27)
-                                        .addComponent(btnCancel)
-                                        .addGap(31, 31, 31)
-                                        .addComponent(btnQuit)
-                                        .addGap(26, 26, 26))))
+                                .addComponent(jLabel6)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(txtTno, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(0, 22, Short.MAX_VALUE)
+                                .addComponent(btnUnpermit)
                                 .addGap(27, 27, 27)
-                                .addComponent(jLabel3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtDno, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(33, 33, 33)
-                                .addComponent(jLabel4)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtNightTime, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap())))))
+                                .addComponent(btnSave)
+                                .addGap(27, 27, 27)))
+                        .addComponent(btnQuit)
+                        .addGap(17, 17, 17)))
+                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(cobCondition, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(txtCondition, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnSearch)
+                .addGap(25, 25, 25))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(27, 27, 27)
-                .addComponent(cobCondition, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(26, 26, 26)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cobCondition, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtCondition, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSearch))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(26, 26, 26)
@@ -169,18 +265,20 @@ public class TstuCurfewFrame extends javax.swing.JInternalFrame {
                     .addComponent(txtDno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4)
                     .addComponent(txtNightTime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel5)
-                    .addComponent(txtNightReason, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6)
-                    .addComponent(txtTno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(31, 31, 31)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(txtNightReason, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel6)
+                        .addComponent(txtTno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(58, 58, 58)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnLoad)
                     .addComponent(btnSave)
-                    .addComponent(btnCancel)
-                    .addComponent(btnQuit))
+                    .addComponent(btnQuit)
+                    .addComponent(btnUnpermit)
+                    .addComponent(btnPermit))
                 .addGap(27, 27, 27))
         );
 
@@ -202,12 +300,173 @@ public class TstuCurfewFrame extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtSnameActionPerformed
 
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+        switch(this.cobCondition.getSelectedIndex()){
+            case 0:
+                if(StringUtil.checkLength(this.txtCondition.getText().trim()) == false){
+                    JOptionPane.showMessageDialog(this, "查询信息不能为空！");
+                }
+                List<tStuCurfew> list0 = sbiz.findBySno(this.txtCondition.getText().trim());
+                showOnTable(list0);
+                this.txtCondition.setText("");
+                break;
+            case 1:
+                if(StringUtil.checkLength(this.txtCondition.getText().trim()) == false){
+                    JOptionPane.showMessageDialog(this, "查询信息不能为空！");
+                }
+                List<tStuCurfew> list1 = sbiz.findBySname(this.txtCondition.getText().trim());
+                showOnTable(list1);
+                this.txtCondition.setText("");
+                break;
+            case 2:
+                if(StringUtil.checkLength(this.txtCondition.getText().trim()) == false){
+                    JOptionPane.showMessageDialog(this, "查询信息不能为空！");
+                }
+                List<tStuCurfew> list2 = sbiz.findByDno(this.txtCondition.getText().trim());
+                showOnTable(list2);
+                this.txtCondition.setText("");
+                break;
+            case 3:
+                if(StringUtil.checkLength(this.txtCondition.getText().trim()) == false){
+                    JOptionPane.showMessageDialog(this, "查询信息不能为空！");
+                }
+                List<tStuCurfew> list3 = sbiz.findByTno(this.txtCondition.getText().trim());
+                showOnTable(list3);
+                this.txtCondition.setText("");
+                break;
+            case 4:
+                if(StringUtil.checkLength(this.txtCondition.getText().trim()) == false){
+                    JOptionPane.showMessageDialog(this, "查询信息不能为空！");
+                }
+                List<tStuCurfew> list4 = sbiz.findByCondition(this.txtCondition.getText().trim());
+                showOnTable(list4);
+                this.txtCondition.setText("");
+                break;
+            default:
+                JOptionPane.showMessageDialog(this, "错误！");
+        }
+        
+    }//GEN-LAST:event_btnSearchActionPerformed
+    //载入
+    private void btnLoadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoadActionPerformed
+        //查询数据库，将数据显示到表格上
+        List<tStuCurfew> list = sbiz.findAll();
+        //显示list的信息
+        showOnTable(list);        
+    }//GEN-LAST:event_btnLoadActionPerformed
+    //鼠标点击表中某一行
+    private void tblCurfewMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblCurfewMouseClicked
+        // 鼠标选中某行，该行信息显示到输入面板
+        int row = this.tblCurfew.getSelectedRow();//表示被选中的那一行
+        //获取每一列的值
+        this.txtSno.setText(this.tblCurfew.getValueAt(row, 0)+"");
+        this.txtSname.setText(this.tblCurfew.getValueAt(row, 1)+"");
+        this.txtDno.setText(this.tblCurfew.getValueAt(row, 2)+"");
+        this.txtNightTime.setText(this.tblCurfew.getValueAt(row, 3)+"");
+        this.txtNightReason.setText(this.tblCurfew.getValueAt(row, 4)+"");
+        this.txtTno.setText(this.tblCurfew.getValueAt(row, 5)+"");
+        //批准按钮可用
+        this.btnSave.setEnabled(true); 
+    }//GEN-LAST:event_tblCurfewMouseClicked
+    //退出
+    private void btnQuitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_btnQuitActionPerformed
+    //批准
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        String Sno = this.txtSno.getText().trim();
+        String Sname = this.txtSname.getText().trim();
+        String Dno = this.txtDno.getText().trim();
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");//小写的mm表示的是分钟 
+        Date NightTime = null;
+        try {
+            NightTime = sdf.parse(this.txtNightTime.getText().trim());
+        } catch (ParseException ex) {
+            Logger.getLogger(TstuCurfewFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        String NightReason = this.txtNightReason.getText().trim();
+        String Tno = this.txtTno.getText().trim();
+        //验证是否已批准
+        if(this.txtTno.getText().trim().equals("null")){
+            Tno = t.getTno();
+            this.txtTno.setText(Tno);
+        }
+        else{
+            JOptionPane.showMessageDialog(this, "您已批准过！");
+            return;
+        }
+
+       
+        //组合对象
+        tStuCurfew c = new tStuCurfew(Sno,Sname,Dno,NightTime,NightReason,Tno);
+        //调用业务类
+        boolean result = sbiz.update(c);
+        if(result == true){
+            JOptionPane.showMessageDialog(this, "批准成功！");
+            List<tStuCurfew> list = sbiz.findAll();
+            //显示list的信息
+            showOnTable(list);
+        }
+        else
+            JOptionPane.showMessageDialog(this, "批准失败！");
+        //清空面板信息
+        clearInput();
+        
+    }//GEN-LAST:event_btnSaveActionPerformed
+    //查询已批准
+    private void btnPermitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPermitActionPerformed
+        //查询数据库，将数据显示到表格上
+        List<tStuCurfew> list = sbiz.findByPermit();
+        //显示list的信息
+        showOnTable(list);      
+    }//GEN-LAST:event_btnPermitActionPerformed
+    //查询未批准
+    private void btnUnpermitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUnpermitActionPerformed
+        //查询数据库，将数据显示到表格上
+        List<tStuCurfew> list = sbiz.findByUnpermit();
+        //显示list的信息
+        showOnTable(list);      
+    }//GEN-LAST:event_btnUnpermitActionPerformed
+
+    //将指定的list数据显示到表上
+    public void showOnTable(List<tStuCurfew> list){
+        //将指定的list数据显示到表上
+        //1.获取指定表格（tblProduct）模型
+        DefaultTableModel dtm = (DefaultTableModel) this.tblCurfew.getModel();
+        //2.清空表格信息
+        while(dtm.getRowCount() > 0){
+            dtm.removeRow(0);
+        }
+        //3.显示表格
+        for(tStuCurfew s : list){
+            Vector vt = new Vector();
+            vt.add(s.getSno());
+            vt.add(s.getSname());
+            vt.add(s.getDno()); 
+            vt.add(s.getNightTime());
+            vt.add(s.getNightReason()); 
+            vt.add(s.getTno());
+            dtm.addRow(vt);
+        }
+    }
+    
+    //清空面板上的数据
+    private void clearInput() {
+        this.txtSno.setText("");
+        this.txtSname.setText("");
+        this.txtDno.setText("");
+        this.txtNightTime.setText("");
+        this.txtNightReason.setText(""); 
+        this.txtTno.setText("");
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnLoad;
+    private javax.swing.JButton btnPermit;
     private javax.swing.JButton btnQuit;
     private javax.swing.JButton btnSave;
+    private javax.swing.JButton btnSearch;
+    private javax.swing.JButton btnUnpermit;
     private javax.swing.JComboBox cobCondition;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -217,7 +476,8 @@ public class TstuCurfewFrame extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tblCurfew;
+    private javax.swing.JTextField txtCondition;
     private javax.swing.JTextField txtDno;
     private javax.swing.JTextField txtNightReason;
     private javax.swing.JTextField txtNightTime;

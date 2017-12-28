@@ -146,6 +146,7 @@ public class TeacherFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_repairInfoActionPerformed
 
     private void curfewInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_curfewInfoActionPerformed
+        TstuCurfewFrame.u = this.u;
         showFrame(TstuCurfewFrame.class);
     }//GEN-LAST:event_curfewInfoActionPerformed
 
