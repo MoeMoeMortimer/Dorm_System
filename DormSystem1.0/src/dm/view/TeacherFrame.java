@@ -129,8 +129,8 @@ public class TeacherFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void myInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_myInfoActionPerformed
-        //TmyInfoFrame.u = this.u;
-        //showFrame(TmyInfoFrame.class);
+        TmyInfoFrame.u = this.u;
+        showFrame(TmyInfoFrame.class);
     }//GEN-LAST:event_myInfoActionPerformed
 
     private void stuManageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stuManageActionPerformed

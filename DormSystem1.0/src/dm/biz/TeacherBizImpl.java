@@ -34,12 +34,6 @@ public class TeacherBizImpl implements TeacherBiz{
 		return sdao.update(sql, params);
 	}
 
-	public Teacher findById(int Tno) {
-		String sql = "select * from Teacher where Tno = ?";
-		Object[] params = {Tno};
-		return (Teacher) sdao.get(sql, Teacher.class, params);
-
-	}
 
 	public List<Teacher> findAll() {
 		String sql = "select * from Teacher";

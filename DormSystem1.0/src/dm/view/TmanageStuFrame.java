@@ -510,6 +510,8 @@ public class TmanageStuFrame extends javax.swing.JInternalFrame {
                 JOptionPane.showMessageDialog(this, "更换宿舍成功");
                 List<tManageStu> list = sbiz.findAssigned(); 
                 showOnTable(list);
+                List<Dormitory> list1 = dbiz.findDormitory();
+                showOnTable1(list1);
             }
             else {
                 JOptionPane.showMessageDialog(this, "更换宿舍失败");
