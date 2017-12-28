@@ -11,8 +11,19 @@ import dm.po.LeaveSchool;
 import dm.po.Mail;
 
 import dm.po.User;
+import dm.util.ExportToExcel;
+import dm.util.FileChooser;
+import dm.util.ImportFromExcel;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -47,6 +58,8 @@ public class SleaveFrame extends javax.swing.JInternalFrame {
         item = new javax.swing.JComboBox();
         start = new com.ouc.cpss.util.DateChooserJButton();
         end = new com.ouc.cpss.util.DateChooserJButton();
+        exp = new javax.swing.JButton();
+        imp = new javax.swing.JButton();
 
         setClosable(true);
         setIconifiable(true);
@@ -62,10 +75,7 @@ public class SleaveFrame extends javax.swing.JInternalFrame {
 
         tbl.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+
             },
             new String [] {
                 "编号", "离校时间", "返校时间"
@@ -75,24 +85,45 @@ public class SleaveFrame extends javax.swing.JInternalFrame {
 
         item.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "全部", "按时间" }));
 
+        exp.setText("导出报表");
+        exp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                expActionPerformed(evt);
+            }
+        });
+
+        imp.setText("从excel导入");
+        imp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                impActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(start, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(end, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(51, 51, 51)
-                .addComponent(item, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(43, 43, 43)
-                .addComponent(btnSearch)
-                .addGap(49, 49, 49))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(29, 29, 29)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 482, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(63, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(start, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(end, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(51, 51, 51)
+                        .addComponent(item, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(43, 43, 43)
+                        .addComponent(btnSearch)
+                        .addGap(49, 49, 49))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(imp)
+                        .addGap(35, 35, 35)
+                        .addComponent(exp)
+                        .addGap(79, 79, 79))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -105,7 +136,11 @@ public class SleaveFrame extends javax.swing.JInternalFrame {
                     .addComponent(end, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(131, 131, 131))
+                .addGap(31, 31, 31)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(exp)
+                    .addComponent(imp))
+                .addGap(77, 77, 77))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -141,6 +176,27 @@ public class SleaveFrame extends javax.swing.JInternalFrame {
             showOnTable(list);
         }
     }//GEN-LAST:event_btnSearchActionPerformed
+
+    private void expActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_expActionPerformed
+        File file = FileChooser.newFile(this);
+        //集合Table数据，输出到文件
+        boolean answer = ExportToExcel.printTableContent(this.tbl, file); //list是要导出到excel的数据集合，来自于数据库查询
+        if(answer == true){
+            JOptionPane.showMessageDialog(this, "导出成功");
+        } else{
+            JOptionPane.showMessageDialog(this, "导出失败");
+        }
+    }//GEN-LAST:event_expActionPerformed
+
+    private void impActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_impActionPerformed
+        File file = FileChooser.selectFile(this);
+        boolean answer = false; 
+        try {
+            answer = ImportFromExcel.printTable(this.tbl, file); 
+        } catch (IOException ex) {
+            Logger.getLogger(SleaveFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_impActionPerformed
         
 
     public void showOnTable(List<LeaveSchool> list){
@@ -161,6 +217,7 @@ public class SleaveFrame extends javax.swing.JInternalFrame {
             vt.add(s.getSltime());
             vt.add(s.getSreturn());
             dtm.addRow(vt);
+            
         }
     }
 
@@ -168,6 +225,8 @@ public class SleaveFrame extends javax.swing.JInternalFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnSearch;
     private com.ouc.cpss.util.DateChooserJButton end;
+    private javax.swing.JButton exp;
+    private javax.swing.JButton imp;
     private javax.swing.JComboBox item;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
