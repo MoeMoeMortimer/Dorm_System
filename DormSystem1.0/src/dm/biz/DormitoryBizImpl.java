@@ -26,12 +26,21 @@ public class DormitoryBizImpl implements DormitoryBiz{
 			}
 
 
-		public boolean update(Dormitory d) {
-			String sql = "update Dormitory set Dtel = ? where Dno = ?";
-			Object[] params = {d.getDtel(), d.getDno()};
+		public boolean updateSub(String dnoNew) {
+			String sql = "update Dormitory set Dsurplus = Dsurplus - 1 where Dno = ?";
+			Object[] params = {dnoNew};
 			return sdao.update(sql, params);
 		}
-
+                
+                public boolean updateAdd(String dnoOld) {
+                    String sql = "update Dormitory set Dsurplus = Dsurplus + 1 where Dno = ?";
+			Object[] params = {dnoOld};
+			return sdao.update(sql, params);
+                }
+                public List<Dormitory> findDormitory() {
+                    String sql = "select * from Dormitory where Dsurplus != 0";
+                    return sdao.query(sql, Dormitory.class);
+                }
 
 		public List<Dormitory> findAll() {
 			String sql = "select * from Dormitory";

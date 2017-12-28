@@ -14,9 +14,12 @@ public interface DormitoryBiz {
 	public boolean delete(String dno);
 	
 
-	public boolean update(Dormitory d);
+	public boolean updateSub(String dnoNew);
 	
-
+        public boolean updateAdd(String dnoOld);
+	
+        public List<Dormitory> findDormitory();
+        
 	public Dormitory findById(String dno);
 	
 

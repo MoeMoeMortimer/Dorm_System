@@ -1,9 +1,9 @@
 package dm.vo;
 
 public class DT {
-	private int Bno;
+	private String Bno;
 	private String Tno;
-	public DT(int bno, String tno) {
+	public DT(String bno, String tno) {
 		super();
 		Bno = bno;
 		Tno = tno;
@@ -11,10 +11,10 @@ public class DT {
 	public DT() {
 		super();
 	}
-	public int getBno() {
+	public String getBno() {
 		return Bno;
 	}
-	public void setBno(int bno) {
+	public void setBno(String bno) {
 		Bno = bno;
 	}
 	public String getTno() {

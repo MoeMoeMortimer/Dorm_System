@@ -1,9 +1,9 @@
 package dm.vo;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class tManageStu {
-	private String sno;
+	private String Sno;
 	private String Sname;
 	private String Ssex;
 	private Integer Sgrade;
@@ -12,22 +12,13 @@ public class tManageStu {
         private Date Scin;
 	public tManageStu(String sno, String sname, String ssex, Integer sgrade, String sdept, String dno, Date scin) {
 		super();
-		this.sno = sno;
+		Sno = sno;
 		Sname = sname;
 		Ssex = ssex;
 		Sgrade = sgrade;
 		Sdept = sdept;
 		Dno = dno;
 		Scin = scin;
-	}
-        public tManageStu(String sno, String sname, String ssex, Integer sgrade, String sdept, String dno) {
-		super();
-		this.sno = sno;
-		Sname = sname;
-		Ssex = ssex;
-		Sgrade = sgrade;
-		Sdept = sdept;
-		Dno = dno;
 	}
 	public Date getScin() {
 		return Scin;
@@ -36,10 +27,10 @@ public class tManageStu {
 		Scin = scin;
 	}
 	public String getSno() {
-		return sno;
+		return Sno;
 	}
 	public void setSno(String sno) {
-		this.sno = sno;
+		Sno = sno;
 	}
 	public String getSname() {
 		return Sname;

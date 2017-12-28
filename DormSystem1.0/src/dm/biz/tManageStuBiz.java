@@ -20,23 +20,25 @@ public interface tManageStuBiz {
 
 	public tManageStu findBySno(String Sno);
         
-    public boolean findStudent(String Sno);
+        public boolean findStudent(String Sno);
         
 	public List<tManageStu> findBySname(String Sname);
         
-    public List<tManageStu> findBySsex(String Ssex);
+        public List<tManageStu> findBySsex(String Ssex);
         
-    public List<tManageStu> findBySgrade(String Sgrade);
+        public List<tManageStu> findBySgrade(String Sgrade);
         
-    public List<tManageStu> findBySdept(String Sdept);
+        public List<tManageStu> findBySdept(String Sdept);
         
-    public List<tManageStu> findByDno(String Dno);
+        public List<tManageStu> findByDno(String Dno);
         
-    public List<tManageStu> findByScin(String startDate,String endDate);
+        public List<tManageStu> findByScin(String startDate,String endDate);
 
 	public List<tManageStu> findAll();
+        
+        public List<tManageStu> findAssigned();
+        
+        public List<tManageStu> findDisAssigned();
 	
 	public List<tManageStu> findByCondition(String condition);
-	
-	 
 }

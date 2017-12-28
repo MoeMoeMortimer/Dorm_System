@@ -7,6 +7,8 @@ package dm.biz;
 import java.util.List;
 
 import dm.dao.tManageStuDao;
+import dm.po.Student;
+import dm.vo.SD;
 import dm.vo.tManageStu;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -19,12 +21,30 @@ public class tManageStuBizImpl implements tManageStuBiz{
     tManageStuDao sdao = new tManageStuDao();
     @Override
     public boolean add(tManageStu s) {
-        Date date = new Date();
-        DateFormat format=new SimpleDateFormat("yyyy-MM-dd");
-        String time = format.format(date);
         String sql = "insert into tManageStu values(?,?,?,?,?,?,?)";
-        Object[] params = {s.getSno(), s.getSname(), s.getSsex(), s.getSgrade(), s.getSdept(), s.getDno(), date};
+	Object[] params = {s.getSno(),s.getSname(),s.getSsex(),s.getSgrade(),s.getSdept(),s.getDno(),s.getScin()};
+        System.out.print("Student add sucess!");
 	return sdao.update(sql, params);
+        
+       /* StudentBiz sbiz = new StudentBizImpl();
+        
+        SDBiz dbiz = new SDBizImpl();
+        Student student = new Student(s.getSno(),s.getSname(),s.getSsex(),s.getSgrade(),s.getSdept());
+        SD d = new SD(s.getSno(),s.getDno(),s.getScin());
+        if(sbiz.add(student)) {
+            System.out.print("Student add sucess!");
+            if(dbiz.add(d)) {
+                System.out.print("SD add sucess!");
+                return true;
+            }
+            else {
+                return false;
+            }           
+        }
+        else {
+                return false;
+        }
+        */
     }
 
     @Override
@@ -36,9 +56,17 @@ public class tManageStuBizImpl implements tManageStuBiz{
 
     @Override
     public boolean update(tManageStu s) {
+        /*
         String sql = "update tManageStu set Sname = ?, Ssex = ?, Sgrade = ?, Sdept = ?, Dno = ?, Scin = ? where Sno = ?";
 	Object[] params = {s.getSname(), s.getSsex(), s.getSgrade(), s.getSdept(), s.getDno(), s.getScin(), s.getSno()};
 	return sdao.update(sql, params);
+        */
+        SD d = new SD(s.getSno(),s.getDno(),s.getScin());
+        SDBiz dbiz = new SDBizImpl();
+        if(dbiz.update(d))
+            return true;
+        else
+            return false;
     }
 
     @Override
@@ -109,8 +137,20 @@ public class tManageStuBizImpl implements tManageStuBiz{
     @Override
     public List<tManageStu> findByCondition(String condition) {
         String sql = "select * from tManageStu where Sno+Sname+Ssex+Sdept+Dno like ?";
-	Object[] params = {"%"+condition+"%"};
-	return sdao.query(sql, tManageStu.class, params);
+		Object[] params = {"%"+condition+"%"};
+		return sdao.query(sql, tManageStu.class, params);
+    }
+
+    @Override
+    public List<tManageStu> findAssigned() {
+        String sql = "select * from tManageStu where Dno is not null";
+        return sdao.query(sql, tManageStu.class);
+    }
+
+    @Override
+    public List<tManageStu> findDisAssigned() {
+        String sql = "select * from tManageStu where Dno is null";
+        return sdao.query(sql, tManageStu.class);
     }
 
     

@@ -30,7 +30,13 @@ public class DTBizImpl implements DTBiz {
 		Object[] params = {Bno};
 		return (DT) ddao.get(sql, DT.class, params);
 	}
-
+        
+        public DT findByTno(String Tno) {
+        String sql = "select * from DT where Bno = ?";
+		Object[] params = {Tno};
+		return (DT) ddao.get(sql, DT.class, params);
+        }
+        
 	public List<DT> findAll()
 	{
 		String sql = "select * from DT";
