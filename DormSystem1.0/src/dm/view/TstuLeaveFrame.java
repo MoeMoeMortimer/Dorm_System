@@ -5,6 +5,15 @@
  */
 package dm.view;
 
+import dm.biz.tStuLeaveBiz;
+import dm.biz.tStuLeaveBizImpl;
+import dm.util.FrameUtil;
+import dm.util.LocationUtil;
+import dm.vo.tStuLeave;
+import java.util.List;
+import java.util.Vector;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author 28104
@@ -14,8 +23,14 @@ public class TstuLeaveFrame extends javax.swing.JInternalFrame {
     /**
      * Creates new form TstuLeaveFrame
      */
+    tStuLeaveBiz lsbiz= new tStuLeaveBizImpl();
     public TstuLeaveFrame() {
         initComponents();
+        this.setTitle("学生离/返校信息");
+        LocationUtil.setScreenCenter(this); //窗口居中
+        this.btnDelete.setEnabled(false);
+        this.btnAdd.setEnabled(false);
+        this.btnSave.setEnabled(false);
     }
 
     /**
@@ -29,7 +44,7 @@ public class TstuLeaveFrame extends javax.swing.JInternalFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        LeaveTable = new javax.swing.JTable();
         cobCondition = new javax.swing.JComboBox();
         txtCondition = new javax.swing.JTextField();
         btnSearch = new javax.swing.JButton();
@@ -55,19 +70,39 @@ public class TstuLeaveFrame extends javax.swing.JInternalFrame {
         setMaximizable(true);
         setResizable(true);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        LeaveTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
                 "学号", "姓名", "宿舍号", "离校时间", "返校时间"
             }
-        ));
-        jScrollPane1.setViewportView(jTable1);
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
 
-        cobCondition.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "全部", "已返校", "未返校", "学号", "宿舍号" }));
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        LeaveTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                LeaveTableMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(LeaveTable);
+
+        cobCondition.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "全部", "已返校", "未返校", "学号", "姓名", "宿舍号" }));
+
+        txtCondition.setText("请输入条件");
 
         btnSearch.setText("查询");
+        btnSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearchActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("学号：");
 
@@ -80,8 +115,18 @@ public class TstuLeaveFrame extends javax.swing.JInternalFrame {
         jLabel5.setText("返校时间：");
 
         btnLoad.setText("载入");
+        btnLoad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLoadActionPerformed(evt);
+            }
+        });
 
         btnAdd.setText("新增");
+        btnAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddActionPerformed(evt);
+            }
+        });
 
         btnDelete.setText("删除");
 
@@ -90,6 +135,11 @@ public class TstuLeaveFrame extends javax.swing.JInternalFrame {
         btnCancel.setText("取消");
 
         btnQuit.setText("退出");
+        btnQuit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnQuitActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -97,7 +147,7 @@ public class TstuLeaveFrame extends javax.swing.JInternalFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 665, Short.MAX_VALUE)
+                .addComponent(jScrollPane1)
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -197,8 +247,80 @@ public class TstuLeaveFrame extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnLoadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoadActionPerformed
+        // TODO add your handling code here:
+        List<tStuLeave> list=lsbiz.findAll();
+        showOntable(list);
+    }//GEN-LAST:event_btnLoadActionPerformed
+
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+        // TODO add your handling code here:
+        String choose = this.cobCondition.getSelectedItem().toString();
+        String condition = this.txtCondition.getText();
+        if(choose.equals("全部"))
+        {
+            List<tStuLeave> list=lsbiz.findAll();
+            showOntable(list);
+        }else if(choose.equals("已返校"))
+        {
+            List<tStuLeave> list=lsbiz.isORNotReturn(true);
+            showOntable(list);
+        }
+        else if(choose.equals("未返校"))
+        {
+            List<tStuLeave> list=lsbiz.isORNotReturn(false);
+            showOntable(list);
+        }else if(choose.equals("学号"))
+        {
+            List<tStuLeave> list=lsbiz.findBySno(condition);
+            showOntable(list);
+        }
+        else if(choose.equals("姓名"))
+        {
+            List<tStuLeave> list=lsbiz.findBySname(condition);
+            showOntable(list);
+        }
+        else
+        {
+            List<tStuLeave> list=lsbiz.findByDno(condition);
+            showOntable(list);
+        }
+    }//GEN-LAST:event_btnSearchActionPerformed
+
+    private void LeaveTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_LeaveTableMouseClicked
+        // TODO add your handling code here:
+        //鼠标选中某行，信息显示到输入面板
+        int Row=this.LeaveTable.getSelectedRow();
+        this.txtSno.setText(this.LeaveTable.getValueAt(Row,0)+"");
+        this.txtSname.setText(this.LeaveTable.getValueAt(Row,1)+"");
+        this.txtDno.setText(this.LeaveTable.getValueAt(Row,2)+"");
+        this.txtSltime.setText(this.LeaveTable.getValueAt(Row,3)+"");
+        this.txtSreturn.setText(this.LeaveTable.getValueAt(Row,4)+"");
+        this.btnDelete.setEnabled(true);
+        this.btnSave.setEnabled(true);
+    }//GEN-LAST:event_LeaveTableMouseClicked
+
+    private void btnQuitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitActionPerformed
+        // TODO add your handling code here:
+        // 退出前的清理工作
+        FrameUtil.framemap.remove(TstuLeaveFrame.class.getName());
+        this.dispose();  
+    }//GEN-LAST:event_btnQuitActionPerformed
+
+    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+        // TODO add your handling code here:
+        // 获取离校信息
+        String Sno = this.txtSno.getText().trim();
+        String Sname = this.txtSname.getText().trim();
+        String Dno = this.txtDno.getText().trim();
+        String Sltime = this.txtSltime.getText().trim();
+        String Sreturn = this.txtSreturn.getText().trim();
+        
+    }//GEN-LAST:event_btnAddActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable LeaveTable;
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnDelete;
@@ -214,7 +336,6 @@ public class TstuLeaveFrame extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTextField txtCondition;
     private javax.swing.JTextField txtDno;
     private javax.swing.JTextField txtSltime;
@@ -222,4 +343,26 @@ public class TstuLeaveFrame extends javax.swing.JInternalFrame {
     private javax.swing.JTextField txtSno;
     private javax.swing.JTextField txtSreturn;
     // End of variables declaration//GEN-END:variables
+
+    private void showOntable(List<tStuLeave> list) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //获取表的模型
+        DefaultTableModel dtm=(DefaultTableModel) this.LeaveTable.getModel();
+        //清空表格信息
+        while(dtm.getRowCount()>0)
+        {
+            dtm.removeRow(0);
+        }
+        //显示数据
+        for(tStuLeave ls:list)
+        {
+            Vector vt=new Vector();
+            vt.add(ls.getSno());
+            vt.add(ls.getSname());
+            vt.add(ls.getDno());
+            vt.add(ls.getSltime());
+            vt.add(ls.getSreturn());
+            dtm.addRow(vt);
+        }
+    }
 }
