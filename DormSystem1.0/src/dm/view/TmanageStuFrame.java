@@ -197,19 +197,33 @@ public class TmanageStuFrame extends javax.swing.JInternalFrame {
 
         jLabel1.setText("学号：");
 
+        txtSno.setEditable(false);
+
         jLabel2.setText("姓名：");
+
+        txtSname.setEditable(false);
 
         jLabel3.setText("性别：");
 
+        txtSsex.setEditable(false);
+
         jLabel4.setText("年级：");
+
+        txtSgrade.setEditable(false);
 
         jLabel5.setText("院系：");
 
+        txtSdept.setEditable(false);
+
         jLabel6.setText("原宿舍号：");
+
+        txtDno.setEditable(false);
 
         jLabel9.setText("--");
 
         jLabel7.setText("入住时间：");
+
+        txtScin.setEditable(false);
 
         btnScin.setText("按照入住时间查询");
         btnScin.addActionListener(new java.awt.event.ActionListener() {
@@ -225,22 +239,29 @@ public class TmanageStuFrame extends javax.swing.JInternalFrame {
             new String [] {
                 "宿舍号", "宿舍楼号", "宿舍容纳量", "宿舍空位", "宿舍电话号码"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         tabDormitory.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tabDormitoryMouseClicked(evt);
             }
         });
         jScrollPane2.setViewportView(tabDormitory);
-        if (tabDormitory.getColumnModel().getColumnCount() > 0) {
-            tabDormitory.getColumnModel().getColumn(2).setResizable(false);
-        }
 
         label.setText("可供分配的宿舍");
 
         jLabel8.setText("学生信息表");
 
         jLabel10.setText("新宿舍号：");
+
+        txtDnoNew.setEditable(false);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -282,14 +303,12 @@ public class TmanageStuFrame extends javax.swing.JInternalFrame {
                                 .addComponent(jLabel2)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(txtSdept, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel6))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(txtSname, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel3))))
+                            .addComponent(txtSname, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtSdept, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(txtScin, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)

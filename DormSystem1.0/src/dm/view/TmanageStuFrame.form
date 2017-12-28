@@ -88,16 +88,13 @@
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" attributes="0">
-                                  <Component id="txtSdept" min="-2" pref="92" max="-2" attributes="0"/>
-                                  <EmptySpace max="32767" attributes="0"/>
-                                  <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <Group type="102" attributes="0">
-                                  <Component id="txtSname" min="-2" pref="92" max="-2" attributes="0"/>
-                                  <EmptySpace max="32767" attributes="0"/>
-                                  <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
-                              </Group>
+                              <Component id="txtSname" min="-2" pref="92" max="-2" attributes="0"/>
+                              <Component id="txtSdept" min="-2" pref="209" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="32767" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="jLabel3" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel6" alignment="1" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <Group type="102" attributes="0">
@@ -354,6 +351,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtSno">
+          <Properties>
+            <Property name="editable" type="boolean" value="false"/>
+          </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel2">
           <Properties>
@@ -361,6 +361,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtSname">
+          <Properties>
+            <Property name="editable" type="boolean" value="false"/>
+          </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel3">
           <Properties>
@@ -368,6 +371,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtSsex">
+          <Properties>
+            <Property name="editable" type="boolean" value="false"/>
+          </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel4">
           <Properties>
@@ -375,6 +381,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtSgrade">
+          <Properties>
+            <Property name="editable" type="boolean" value="false"/>
+          </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel5">
           <Properties>
@@ -382,6 +391,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtSdept">
+          <Properties>
+            <Property name="editable" type="boolean" value="false"/>
+          </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel6">
           <Properties>
@@ -389,6 +401,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtDno">
+          <Properties>
+            <Property name="editable" type="boolean" value="false"/>
+          </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel9">
           <Properties>
@@ -401,6 +416,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtScin">
+          <Properties>
+            <Property name="editable" type="boolean" value="false"/>
+          </Properties>
         </Component>
         <Component class="com.ouc.cpss.util.DateChooserJButton" name="startDate">
         </Component>
@@ -425,11 +443,11 @@
               <Properties>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                   <Table columnCount="5" rowCount="0">
-                    <Column editable="true" title="&#x5bbf;&#x820d;&#x53f7;" type="java.lang.Object"/>
-                    <Column editable="true" title="&#x5bbf;&#x820d;&#x697c;&#x53f7;" type="java.lang.Object"/>
-                    <Column editable="true" title="&#x5bbf;&#x820d;&#x5bb9;&#x7eb3;&#x91cf;" type="java.lang.Object"/>
-                    <Column editable="true" title="&#x5bbf;&#x820d;&#x7a7a;&#x4f4d;" type="java.lang.Object"/>
-                    <Column editable="true" title="&#x5bbf;&#x820d;&#x7535;&#x8bdd;&#x53f7;&#x7801;" type="java.lang.Object"/>
+                    <Column editable="false" title="&#x5bbf;&#x820d;&#x53f7;" type="java.lang.Object"/>
+                    <Column editable="false" title="&#x5bbf;&#x820d;&#x697c;&#x53f7;" type="java.lang.Object"/>
+                    <Column editable="false" title="&#x5bbf;&#x820d;&#x5bb9;&#x7eb3;&#x91cf;" type="java.lang.Object"/>
+                    <Column editable="false" title="&#x5bbf;&#x820d;&#x7a7a;&#x4f4d;" type="java.lang.Object"/>
+                    <Column editable="false" title="&#x5bbf;&#x820d;&#x7535;&#x8bdd;&#x53f7;&#x7801;" type="java.lang.Object"/>
                   </Table>
                 </Property>
                 <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
@@ -444,7 +462,7 @@
                       <Editor/>
                       <Renderer/>
                     </Column>
-                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="false">
+                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
                       <Title/>
                       <Editor/>
                       <Renderer/>
@@ -487,6 +505,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtDnoNew">
+          <Properties>
+            <Property name="editable" type="boolean" value="false"/>
+          </Properties>
         </Component>
       </SubComponents>
     </Container>
