@@ -12,6 +12,7 @@ import java.beans.PropertyVetoException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JInternalFrame;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -89,6 +90,11 @@ public class TeacherFrame extends javax.swing.JFrame {
         });
 
         logout.setText("注销");
+        logout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                logoutActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -154,6 +160,13 @@ public class TeacherFrame extends javax.swing.JFrame {
         
         showFrame(TdorAssetFrame.class);
     }//GEN-LAST:event_assetManageActionPerformed
+
+    private void logoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutActionPerformed
+        JOptionPane.showMessageDialog(this, "注销成功！");
+        LoginFrame lf = new LoginFrame();
+        lf.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_logoutActionPerformed
         //显示窗体内容
     public void showFrame(Class clazz) {
         try {

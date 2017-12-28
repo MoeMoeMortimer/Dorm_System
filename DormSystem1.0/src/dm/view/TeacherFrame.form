@@ -115,6 +115,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="&#x6ce8;&#x9500;"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="logoutActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>
