@@ -24,40 +24,40 @@ public class tFixInfoBizImpl implements tFixInfoBiz{
 
     @Override
     public List<tFixInfo> findByAno(String Ano) {
-        String sql = "select * from tFixInfo where Ano = ?";
+        String sql = "select * from tFixInfo where Ano = ? order by ReportTime DESC";
 	Object[] params = {Ano};
 	return tdao.query(sql, tFixInfo.class, params);
     }
 
     @Override
     public List<tFixInfo> findByAname(String Aname) {
-        String sql = "select * from tFixInfo where Aname = ?";
+        String sql = "select * from tFixInfo where Aname = ? order by ReportTime DESC";
 	Object[] params = {Aname};
 	return tdao.query(sql, tFixInfo.class, params);     
     }
 
     @Override
     public List<tFixInfo> findByDno(String Dno) {
-        String sql = "select * from tFixInfo where Dno = ?";
+        String sql = "select * from tFixInfo where Dno = ? order by ReportTime DESC";
 	Object[] params = {Dno};
 	return tdao.query(sql, tFixInfo.class, params);
     }
 
     @Override
     public List<tFixInfo> findBySolve() {
-        String sql = "select * from tFixInfo where FixTime is not null";
+        String sql = "select * from tFixInfo where FixTime is not null order by ReportTime DESC";
 	return tdao.query(sql, tFixInfo.class);
     }
 
     @Override
     public List<tFixInfo> findByUnsolve() {
-        String sql = "select * from tFixInfo where FixTime is null";
+        String sql = "select * from tFixInfo where FixTime is null order by ReportTime DESC";
 	return tdao.query(sql, tFixInfo.class);
     }
 
     @Override
     public List<tFixInfo> findAll() {
-        String sql = "select * from tFixInfo";
+        String sql = "select * from tFixInfo order by ReportTime DESC";
 	return tdao.query(sql, tFixInfo.class);   
     }
 
