@@ -5,13 +5,26 @@
  */
 package dm.view;
 
+import dm.biz.LeaveSchoolBiz;
+import dm.biz.LeaveSchoolBizImpl;
+import dm.biz.SDBiz;
+import dm.biz.SDBizImpl;
+import dm.biz.StudentBiz;
+import dm.biz.StudentBizImpl;
 import dm.biz.tStuLeaveBiz;
 import dm.biz.tStuLeaveBizImpl;
+import dm.po.LeaveSchool;
+import dm.po.Student;
 import dm.util.FrameUtil;
 import dm.util.LocationUtil;
+import dm.vo.SD;
+import dm.vo.SD;
 import dm.vo.tStuLeave;
+import dm.vo.tStuLeave;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Vector;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -24,13 +37,16 @@ public class TstuLeaveFrame extends javax.swing.JInternalFrame {
      * Creates new form TstuLeaveFrame
      */
     tStuLeaveBiz lsbiz= new tStuLeaveBizImpl();
+    StudentBiz sbiz = new StudentBizImpl();
+    SDBiz sdbiz = new SDBizImpl();
+    LeaveSchoolBiz LSdao= new LeaveSchoolBizImpl();
     public TstuLeaveFrame() {
         initComponents();
         this.setTitle("学生离/返校信息");
         LocationUtil.setScreenCenter(this); //窗口居中
+        this.btnReturn.setEnabled(false);
+        this.btnLeave.setEnabled(false);
         this.btnDelete.setEnabled(false);
-        this.btnAdd.setEnabled(false);
-        this.btnSave.setEnabled(false);
     }
 
     /**
@@ -59,11 +75,11 @@ public class TstuLeaveFrame extends javax.swing.JInternalFrame {
         jLabel5 = new javax.swing.JLabel();
         txtSreturn = new javax.swing.JTextField();
         btnLoad = new javax.swing.JButton();
-        btnAdd = new javax.swing.JButton();
-        btnDelete = new javax.swing.JButton();
-        btnSave = new javax.swing.JButton();
-        btnCancel = new javax.swing.JButton();
+        btnLeave = new javax.swing.JButton();
+        btnReturn = new javax.swing.JButton();
+        btnFindStu = new javax.swing.JButton();
         btnQuit = new javax.swing.JButton();
+        btnDelete = new javax.swing.JButton();
 
         setClosable(true);
         setIconifiable(true);
@@ -96,6 +112,11 @@ public class TstuLeaveFrame extends javax.swing.JInternalFrame {
         cobCondition.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "全部", "已返校", "未返校", "学号", "姓名", "宿舍号" }));
 
         txtCondition.setText("请输入条件");
+        txtCondition.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txtConditionMouseClicked(evt);
+            }
+        });
 
         btnSearch.setText("查询");
         btnSearch.addActionListener(new java.awt.event.ActionListener() {
@@ -106,13 +127,27 @@ public class TstuLeaveFrame extends javax.swing.JInternalFrame {
 
         jLabel1.setText("学号：");
 
+        txtSno.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txtSnoMouseClicked(evt);
+            }
+        });
+
         jLabel2.setText("姓名：");
+
+        txtSname.setEditable(false);
 
         jLabel3.setText("宿舍号：");
 
+        txtDno.setEditable(false);
+
         jLabel4.setText("离校时间：");
 
+        txtSltime.setEditable(false);
+
         jLabel5.setText("返校时间：");
+
+        txtSreturn.setEditable(false);
 
         btnLoad.setText("载入");
         btnLoad.addActionListener(new java.awt.event.ActionListener() {
@@ -121,23 +156,38 @@ public class TstuLeaveFrame extends javax.swing.JInternalFrame {
             }
         });
 
-        btnAdd.setText("新增");
-        btnAdd.addActionListener(new java.awt.event.ActionListener() {
+        btnLeave.setText("离校写入");
+        btnLeave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAddActionPerformed(evt);
+                btnLeaveActionPerformed(evt);
             }
         });
 
-        btnDelete.setText("删除");
+        btnReturn.setText("返校确认");
+        btnReturn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReturnActionPerformed(evt);
+            }
+        });
 
-        btnSave.setText("修改/保存");
-
-        btnCancel.setText("取消");
+        btnFindStu.setText("信息查询");
+        btnFindStu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFindStuActionPerformed(evt);
+            }
+        });
 
         btnQuit.setText("退出");
         btnQuit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnQuitActionPerformed(evt);
+            }
+        });
+
+        btnDelete.setText("删除");
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
             }
         });
 
@@ -150,7 +200,7 @@ public class TstuLeaveFrame extends javax.swing.JInternalFrame {
                 .addComponent(jScrollPane1)
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(57, 427, Short.MAX_VALUE)
                 .addComponent(cobCondition, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(26, 26, 26)
                 .addComponent(txtCondition, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -182,26 +232,26 @@ public class TstuLeaveFrame extends javax.swing.JInternalFrame {
                                 .addComponent(jLabel5))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                 .addComponent(btnLoad)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnAdd)))
-                        .addGap(18, 18, 18)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnFindStu)
+                                .addGap(12, 12, 12)))
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtSreturn, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(9, 9, 9)
-                                .addComponent(btnDelete)
+                                .addGap(2, 2, 2)
+                                .addComponent(btnLeave)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnReturn)
                                 .addGap(18, 18, 18)
-                                .addComponent(btnSave)
-                                .addGap(30, 30, 30)
-                                .addComponent(btnCancel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnQuit)))))
-                .addGap(28, 28, 28))
+                                .addComponent(btnDelete)
+                                .addGap(28, 28, 28)
+                                .addComponent(btnQuit))
+                            .addComponent(txtSreturn, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(28, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(41, 41, 41)
+                .addContainerGap(45, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cobCondition, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtCondition, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -222,14 +272,14 @@ public class TstuLeaveFrame extends javax.swing.JInternalFrame {
                     .addComponent(txtSltime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5)
                     .addComponent(txtSreturn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
+                .addGap(43, 43, 43)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnLoad)
-                    .addComponent(btnAdd)
-                    .addComponent(btnDelete)
-                    .addComponent(btnSave)
-                    .addComponent(btnCancel)
-                    .addComponent(btnQuit))
+                    .addComponent(btnLeave)
+                    .addComponent(btnReturn)
+                    .addComponent(btnFindStu)
+                    .addComponent(btnQuit)
+                    .addComponent(btnDelete))
                 .addGap(24, 24, 24))
         );
 
@@ -249,12 +299,14 @@ public class TstuLeaveFrame extends javax.swing.JInternalFrame {
 
     private void btnLoadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoadActionPerformed
         // TODO add your handling code here:
+        ClearInput1();
         List<tStuLeave> list=lsbiz.findAll();
         showOntable(list);
     }//GEN-LAST:event_btnLoadActionPerformed
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
         // TODO add your handling code here:
+        ClearInput1();
         String choose = this.cobCondition.getSelectedItem().toString();
         String condition = this.txtCondition.getText();
         if(choose.equals("全部"))
@@ -296,8 +348,17 @@ public class TstuLeaveFrame extends javax.swing.JInternalFrame {
         this.txtDno.setText(this.LeaveTable.getValueAt(Row,2)+"");
         this.txtSltime.setText(this.LeaveTable.getValueAt(Row,3)+"");
         this.txtSreturn.setText(this.LeaveTable.getValueAt(Row,4)+"");
+        String Sreturn=this.txtSreturn.getText().trim();
+        if(Sreturn.equals("null"))
+        {
+            this.btnReturn.setEnabled(true);
+        }
+        else
+        {
+            this.btnReturn.setEnabled(false);
+        }
         this.btnDelete.setEnabled(true);
-        this.btnSave.setEnabled(true);
+        this.btnLeave.setEnabled(false);
     }//GEN-LAST:event_LeaveTableMouseClicked
 
     private void btnQuitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitActionPerformed
@@ -307,26 +368,141 @@ public class TstuLeaveFrame extends javax.swing.JInternalFrame {
         this.dispose();  
     }//GEN-LAST:event_btnQuitActionPerformed
 
-    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+    private void btnLeaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLeaveActionPerformed
         // TODO add your handling code here:
-        // 获取离校信息
+        java.sql.Date currentDate = new java.sql.Date(System.currentTimeMillis());
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        formatter.format(currentDate);
         String Sno = this.txtSno.getText().trim();
         String Sname = this.txtSname.getText().trim();
-        String Dno = this.txtDno.getText().trim();
-        String Sltime = this.txtSltime.getText().trim();
-        String Sreturn = this.txtSreturn.getText().trim();
+        LeaveSchool ls= new LeaveSchool(Sno,currentDate,null);
+        int answer = JOptionPane.showConfirmDialog(this, "学号："+Sno+"\n姓名："+Sname+"\n离校时间："+currentDate+"\n\n您确定要写入吗？");
+        if(answer == JOptionPane.YES_OPTION)
+        {   
+            if(LSdao.add(ls))
+            {
+                JOptionPane.showMessageDialog(this,"写入成功！");
+                //重新载入
+                List<tStuLeave> list=lsbiz.findAll();
+                showOntable(list);
+                ClearInput1();
+                this.btnLeave.setEnabled(false);
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(this,"写入失败！");
+            }
+        }else {
+        }
         
-    }//GEN-LAST:event_btnAddActionPerformed
+    }//GEN-LAST:event_btnLeaveActionPerformed
+
+    private void btnFindStuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFindStuActionPerformed
+        // TODO add your handling code here:
+        // 获取离校信息
+        ClearInput();
+        String Sno = this.txtSno.getText().trim();
+        // 查询学生信息S
+        Student s = sbiz.findById(Sno);
+        this.txtSname.setText(s.getSname()+"");
+        SD sd = sdbiz.findById(Sno);
+        this.txtDno.setText(sd.getDno()+"");
+        this.btnLeave.setEnabled(true);
+        this.btnReturn.setEnabled(false);
+        this.btnDelete.setEnabled(false);
+    }//GEN-LAST:event_btnFindStuActionPerformed
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        // TODO add your handling code here:
+        String Sno = this.txtSno.getText().trim();
+        String Sname =this.txtSname.getText().trim();
+        String Sltime=this.txtSltime.getText().trim();
+        String Sreturn=this.txtSreturn.getText().trim();
+        java.sql.Date sqlSltime=null;
+        java.sql.Date sqlSreturn=null;
+        sqlSltime=java.sql.Date.valueOf(Sltime);
+        int answer=0;
+        if(!Sreturn.equals("null"))
+        {
+            sqlSreturn=java.sql.Date.valueOf(Sreturn);
+            answer = JOptionPane.showConfirmDialog(this, "学号："+Sno+"\n姓名："+Sname+"\n离校时间："+sqlSltime+"\n返校时间："+sqlSreturn+"\n\n您确定要删除吗？");
+        }
+        else
+        {
+            Sreturn="还未返校";
+            answer = JOptionPane.showConfirmDialog(this, "学号："+Sno+"\n姓名："+Sname+"\n离校时间："+sqlSltime+"\n返校时间："+Sreturn+"\n\n您确定要删除吗？");
+        }
+        if(answer == JOptionPane.YES_OPTION)
+        {
+           if(LSdao.delete(Sno, sqlSltime))
+           {
+               JOptionPane.showMessageDialog(this,"删除成功！");
+               //重新载入
+                List<tStuLeave> list=lsbiz.findAll();
+                showOntable(list);
+                ClearInput1();
+                this.btnDelete.setEnabled(false);
+           }
+           else
+          {
+               JOptionPane.showMessageDialog(this,"删除失败！");
+          }
+        }else{
+        }
+            
+    }//GEN-LAST:event_btnDeleteActionPerformed
+
+    private void btnReturnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReturnActionPerformed
+        // TODO add your handling code here:
+        java.sql.Date currentDate = new java.sql.Date(System.currentTimeMillis());
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        formatter.format(currentDate);
+        String Sno = this.txtSno.getText().trim();
+        String Sname =this.txtSname.getText().trim();
+        String Sltime=this.txtSltime.getText().trim();
+        java.sql.Date sqlSltime=null;
+        sqlSltime=java.sql.Date.valueOf(Sltime);
+        int answer=0;
+        answer = JOptionPane.showConfirmDialog(this, "学号："+Sno+"\n姓名："+Sname+"\n离校时间："+sqlSltime+"\n返校时间："+currentDate+"\n\n您确定要确认吗？");
+        if(answer ==JOptionPane.YES_OPTION){
+        if(LSdao.update(Sno, sqlSltime, currentDate))
+            {
+            JOptionPane.showMessageDialog(this,"返校确认成功！");
+               //重新载入
+                List<tStuLeave> list=lsbiz.findAll();
+                showOntable(list);
+                ClearInput1();
+                this.btnReturn.setEnabled(false);
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(this,"返校确认失败！");
+            }
+        }
+        else{
+        }
+        
+    }//GEN-LAST:event_btnReturnActionPerformed
+
+    private void txtConditionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtConditionMouseClicked
+        // TODO add your handling code here:
+        this.txtCondition.setText("");
+    }//GEN-LAST:event_txtConditionMouseClicked
+
+    private void txtSnoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtSnoMouseClicked
+        // TODO add your handling code here:
+        ClearInput1();
+    }//GEN-LAST:event_txtSnoMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable LeaveTable;
-    private javax.swing.JButton btnAdd;
-    private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnDelete;
+    private javax.swing.JButton btnFindStu;
+    private javax.swing.JButton btnLeave;
     private javax.swing.JButton btnLoad;
     private javax.swing.JButton btnQuit;
-    private javax.swing.JButton btnSave;
+    private javax.swing.JButton btnReturn;
     private javax.swing.JButton btnSearch;
     private javax.swing.JComboBox cobCondition;
     private javax.swing.JLabel jLabel1;
@@ -364,5 +540,19 @@ public class TstuLeaveFrame extends javax.swing.JInternalFrame {
             vt.add(ls.getSreturn());
             dtm.addRow(vt);
         }
+    }
+    private void ClearInput(){
+        //this.txtSno.setText("");
+        this.txtSname.setText("");
+        this.txtDno.setText("");
+        this.txtSltime.setText("");
+        this.txtSreturn.setText("");
+    }
+    private void ClearInput1(){
+        this.txtSno.setText("");
+        this.txtSname.setText("");
+        this.txtDno.setText("");
+        this.txtSltime.setText("");
+        this.txtSreturn.setText("");
     }
 }

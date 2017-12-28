@@ -10,11 +10,11 @@ public interface LeaveSchoolBiz {
 
 	public boolean add(LeaveSchool ls);
 	
-
-	public boolean delete(String dno, Date Sltime, Date Sreturn);
+	public boolean delete(String Sno, java.sql.Date Sltime);
+        
+        public boolean update(String Sno, java.sql.Date Sltime,java.sql.Date Sreturn);
 	
-
-	public List<LeaveSchool> findById(String sno);
+        public List<LeaveSchool> findById (String sno);
 
 	public List<LeaveSchool> findAll();
 	

@@ -17,13 +17,17 @@ public class LeaveSchoolBizImpl implements LeaveSchoolBiz {
 	}
 
 
-	public boolean delete(String dno, Date Sltime, Date Sreturn) {
-
-		String sql = "delete from LeaveSchool where Sno = ? and Sltime = ? and Sreturn = ?";
-		Object[] params = {dno, Sltime, Sreturn};
+	public boolean delete(String Sno, java.sql.Date Sltime) {
+		String sql = "delete from LeaveSchool where Sno = ? and Sltime = ?";
+		Object[] params = {Sno, Sltime};
 		return sdao.update(sql, params);
 		}
-
+        public boolean update(String Sno, java.sql.Date Sltime,java.sql.Date Sreturn)
+        {
+            String sql = "update LeaveSchool set Sreturn = ? where Sno = ? and Sltime = ?";
+            Object[] params ={Sreturn, Sno, Sltime};
+            return sdao.update(sql, params);
+        }
 	public List<LeaveSchool> findAll() {
 		String sql = "select * from LeaveSchool";
 		return sdao.query(sql, LeaveSchool.class);
@@ -36,13 +40,19 @@ public class LeaveSchoolBizImpl implements LeaveSchoolBiz {
 	}
 
 
-	public List<LeaveSchool> findById (String sno) {
+	/*public LeaveSchool findById (String sno) {
+		String sql = "select * from LeaveSchool where Sno = ?";
+		Object[] params = {sno};
+		return (LeaveSchool) sdao.get(sql, LeaveSchool.class, params);
+	}*/
+        
+        	public List<LeaveSchool> findById (String sno) {
 		String sql = "select * from LeaveSchool where Sno = ?";
 		Object[] params = {sno};
 		return sdao.query(sql, LeaveSchool.class, params);
 	}
-
-    @Override
+        
+            @Override
     public List<LeaveSchool> findByIdDate(String Sno, String st, String ed) {
         String sql = "select * from LeaveSchool where Sno = ? and Sltime >= ? and Sreturn <= ?";
 	Object[] params = {Sno, st, ed};
