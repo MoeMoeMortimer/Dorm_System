@@ -396,6 +396,16 @@ insert into SD values('15090032010','3#102','2015-8-25');
 insert into SD values('15090032013','3#102','2015-8-25');
 insert into SD values('16090012014','1#103','2016-8-25');
 insert into SD values('17090011045','1#103','2017-8-25');
+insert into SD values('13130011017',null,null);
+insert into SD values('14130031045',null,null);
+insert into SD values('15130052008',null,null);
+insert into SD values('16130061005',null,null);
+insert into SD values('16130041005',null,null);
+insert into SD values('16130061015',null,null);
+insert into SD values('17140023007',null,null);
+insert into SD values('16140023017',null,null);
+insert into SD values('15140011012',null,null);
+insert into SD values('15140002009',null,null);
 
 
 --创建DT（宿舍管理关系）表
