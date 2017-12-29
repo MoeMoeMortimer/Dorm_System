@@ -72,6 +72,16 @@ insert into Users values('15090032010','15090032010','0');
 insert into Users values('15090032013','15090032013','0');
 insert into Users values('16090012014','16090012014','0');
 insert into Users values('17090011045','17090011045','0');
+insert into Users values('13130011017','13130011017','0');
+insert into Users values('14130031045','14130031045','0');
+insert into Users values('15130052008','15130052008','0');
+insert into Users values('16130061005','16130061005','0');
+insert into Users values('16130041005','16130041005','0');
+insert into Users values('16130061015','16130061015','0');
+insert into Users values('17140023007','17140023007','0');
+insert into Users values('16140023017','16140023017','0');
+insert into Users values('15140011012','15140011012','0');
+insert into Users values('15140002009','15140002009','0');
 
 --创建Student（学生）表
 create table Student
@@ -118,6 +128,16 @@ insert into Student values('15090032010','张立','男',2015,'工程学院');
 insert into Student values('15090032013','刘帆','男',2015,'工程学院');
 insert into Student values('16090012014','林诺','女',2016,'工程学院');
 insert into Student values('17090011045','张冰洁','女',2017,'工程学院');
+insert into Student values('13130011017','齐晓松','男',2013,'外国语学院');
+insert into Student values('14130031045','叶宏远','男',2014,'外国语学院');
+insert into Student values('15130052008','李一桐','女',2015,'外国语学院');
+insert into Student values('16130061005','孙念文','女',2016,'外国语学院');
+insert into Student values('16130041005','孙雪慧','女',2016,'外国语学院');
+insert into Student values('16130061015','李琪','女',2016,'外国语学院');
+insert into Student values('17140023007','郑涛','男',2017,'文学与新闻传播学院');
+insert into Student values('16140023017','郭晓冉','女',2016,'文学与新闻传播学院');
+insert into Student values('15140011012','廖佳','女',2015,'文学与新闻传播学院');
+insert into Student values('15140002009','丁竹心','女',2015,'文学与新闻传播学院');
 
 
 --创建Teacher（教师）表
@@ -130,7 +150,7 @@ create table Teacher
 alter table Teacher
 add constraint CK_Tsex check(Tsex='女' or Tsex='男');
 
-insert into Teacher values('2110','赵凤娇','女');
+insert into Teacher values('2110','谢梦','女');
 insert into Teacher values('2111','苏丽','女');
 insert into Teacher values('2120','刘杰','男');
 insert into Teacher values('2121','乔楚','男');
@@ -225,6 +245,7 @@ insert into Asset values('5','玻璃',130,140);
 insert into Asset values('6','门',1600,50);
 insert into Asset values('7','公共洗衣机',2500,4);
 insert into Asset values('8','公共吹风机',70,15);
+insert into Asset values('9','电扇',260,25);
 
 
 --创建LeaveSchool（学生离校）表
@@ -330,7 +351,8 @@ insert into Repairs values('2#101','5','2018-1-3','窗户玻璃破惹',null);
 insert into Repairs values('2#102','4','2015-12-11','灯不亮惹','2015-12-12');
 insert into Repairs values('2#102','8','2017-11-11','吹风机坏惹',null);
 insert into Repairs values('2#103','1','2015-9-19','床板坏惹','2015-9-19');
-insert into Repairs values('2#103','7','2017-12-11 22:45:00','洗衣机不工作惹',null);
+insert into Repairs values('2#103','7','2017-12-1','洗衣机不工作惹',null);
+insert into Repairs values('2#103','9','2017-12-28','电扇不转惹',null);
 
 --创建SD（学生宿舍关系）表
 create table SD
