@@ -4,6 +4,8 @@ import java.util.List;
 
 import dm.dao.MailDao;
 import dm.po.Mail;
+import dm.vo.Mailcount;
+import java.util.ArrayList;
 
 public class MailBizImpl implements MailBiz{
 
@@ -50,11 +52,22 @@ public class MailBizImpl implements MailBiz{
 	}
 	
 	public List<Mail> findByMid(String mno) {
-		String sql = "select * from Mail where Sno = ?";
+		String sql = "select * from Mail where Mno = ?";
 		Object[] params = {mno};
 		return sdao.query(sql, Mail.class, params);
 	}
-
+        public List<Mail> findByTimeAr(String st,String ed)
+        {
+            String sql = "select * from Mail where Marrive >= ? and Marrive <= ?";
+            Object[] params = {st, ed};
+            return sdao.query(sql, Mail.class, params);
+        }
+        public List<Mail> findByTimeAc(String st, String ed)
+        {
+            String sql = "select * from Mail where Maccept >= ? and Maccept <= ?";
+            Object[] params = {st, ed};
+            return sdao.query(sql, Mail.class, params);
+        }
     @Override
     public List<Mail> findBySidTimeAll(String sno, String st, String ed) {
         String sql = "select * from Mail where Marrive >= ? and Marrive <= ? and Sno = ? ";
@@ -75,5 +88,28 @@ public class MailBizImpl implements MailBiz{
 	Object[] params = {st, ed, sno};
 	return sdao.query(sql, Mail.class, params);
     }
-
+    public List<Mailcount> findBySidCount ()
+    {
+        String sql = new String();
+        sql = "select Sno,count(*) as Mailcount from Mail group by Sno";
+        return (sdao.query(sql, Mailcount.class));
+    }
+    
+    public boolean findBySno(String sno) {
+        String sql = "select * from Mail where Sno = ?";
+	Object[] params = {sno};
+        List<Mail> list = sdao.query(sql, Mail.class, params);
+	if(list!=null) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+        
+    public boolean deleteBySno(String sno) {
+        String sql = "delete from Mail where Sno = ?";
+        Object[] params = {sno};
+	return sdao.update(sql, params);    
+    }
 }

@@ -27,16 +27,19 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
-              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Component id="leaveSchool" max="32767" attributes="0"/>
-                  <Component id="stuManage" alignment="0" max="32767" attributes="0"/>
-                  <Component id="myInfo" alignment="0" max="32767" attributes="0"/>
-                  <Component id="repairInfo" alignment="0" max="32767" attributes="0"/>
-                  <Component id="curfewInfo" alignment="0" max="32767" attributes="0"/>
-                  <Component id="assetManage" alignment="0" max="32767" attributes="0"/>
-                  <Component id="logout" alignment="0" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="leaveSchool" max="32767" attributes="0"/>
+                      <Component id="stuManage" alignment="0" max="32767" attributes="0"/>
+                      <Component id="myInfo" alignment="0" max="32767" attributes="0"/>
+                      <Component id="repairInfo" alignment="0" max="32767" attributes="0"/>
+                      <Component id="curfewInfo" alignment="0" max="32767" attributes="0"/>
+                      <Component id="assetManage" alignment="0" max="32767" attributes="0"/>
+                      <Component id="mailManage" max="32767" attributes="0"/>
+                  </Group>
+                  <Component id="logout" min="-2" pref="99" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="0" pref="387" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="1179" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -55,9 +58,11 @@
               <Component id="curfewInfo" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="assetManage" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
+              <Component id="mailManage" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="logout" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace pref="380" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -117,6 +122,14 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="logoutActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="mailManage">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="&#x5b66;&#x751f;&#x4fe1;&#x4ef6;&#x7ba1;&#x7406;"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mailManageActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>
