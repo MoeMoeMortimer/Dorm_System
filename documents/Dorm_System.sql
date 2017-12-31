@@ -83,90 +83,6 @@ insert into Users values('16140023017','16140023017','0');
 insert into Users values('15140011012','15140011012','0');
 insert into Users values('15140002009','15140002009','0');
 
---创建Student（学生）表
-create table Student
-(Sno char(11) primary key,
- Sname char(20) not null,
- Ssex char(2),
- Sgrade smallint,
- Sdept char(20)
-);
---对Ssex和Sage添加check约束
-alter table Student
-add constraint CK_Ssex check(Ssex='女' or Ssex='男');
-
-insert into Student values('14010011001','安辰','女',2014,'海洋环境学院');
-insert into Student values('14010011002','安琪','女',2014,'海洋环境学院');
-insert into Student values('14010011003','陈宇','女',2014,'海洋环境学院');
-insert into Student values('14010022001','陈佳玉','女',2014,'海洋环境学院');
-insert into Student values('14010022002','董玥','女',2014,'海洋环境学院');
-insert into Student values('14010022003','丁强','男',2014,'海洋环境学院');
-insert into Student values('14010022004','李勇','男',2014,'海洋环境学院');
-insert into Student values('14020011012','梁非凡','男',2014,'信息科学与工程学院');
-insert into Student values('14020011013','蒋丞','男',2014,'信息科学与工程学院');
-insert into Student values('15020012001','顾飞','男',2015,'信息科学与工程学院');
-insert into Student values('15020011033','詹永旭','男',2015,'信息科学与工程学院');
-insert into Student values('14020031015','王敏','女',2014,'信息科学与工程学院');
-insert into Student values('16020041002','陈冬','女',2016,'信息科学与工程学院');
-insert into Student values('17020023005','李楠','女',2017,'信息科学与工程学院');
-insert into Student values('15020032010','刘渊晨','女',2015,'信息科学与工程学院');
-insert into Student values('15020032009','刘艺语','女',2015,'信息科学与工程学院');
-insert into Student values('15020031042','刘峰','男',2015,'信息科学与工程学院');
-insert into Student values('15020031048','刘真','男',2015,'信息科学与工程学院');
-insert into Student values('15020031108','张庆渝','男',2015,'信息科学与工程学院');
-insert into Student values('15110041008','李悦','女',2015,'管理学院');
-insert into Student values('15110011002','陈泽鑫','男',2015,'管理学院');
-insert into Student values('16110022037','徐帅','男',2016,'管理学院');
-insert into Student values('14120011028','张凌云','男',2014,'经济学院');
-insert into Student values('15120012009','吴峰','男',2015,'经济学院');
-insert into Student values('16120013011','白雪','女',2016,'经济学院');
-insert into Student values('16120013013','江浩','男',2016,'经济学院');
-insert into Student values('17120014011','沈深','男',2017,'经济学院');
-insert into Student values('14090021027','李然','男',2014,'工程学院');
-insert into Student values('14090021001','罗亮','男',2014,'工程学院');
-insert into Student values('15090032010','张立','男',2015,'工程学院');
-insert into Student values('15090032013','刘帆','男',2015,'工程学院');
-insert into Student values('16090012014','林诺','女',2016,'工程学院');
-insert into Student values('17090011045','张冰洁','女',2017,'工程学院');
-insert into Student values('13130011017','齐晓松','男',2013,'外国语学院');
-insert into Student values('14130031045','叶宏远','男',2014,'外国语学院');
-insert into Student values('15130052008','李一桐','女',2015,'外国语学院');
-insert into Student values('16130061005','孙念文','女',2016,'外国语学院');
-insert into Student values('16130041005','孙雪慧','女',2016,'外国语学院');
-insert into Student values('16130061015','李琪','女',2016,'外国语学院');
-insert into Student values('17140023007','郑涛','男',2017,'文学与新闻传播学院');
-insert into Student values('16140023017','郭晓冉','女',2016,'文学与新闻传播学院');
-insert into Student values('15140011012','廖佳','女',2015,'文学与新闻传播学院');
-insert into Student values('15140002009','丁竹心','女',2015,'文学与新闻传播学院');
-
-
---创建Teacher（教师）表
-create table Teacher
-(Tno char(11) primary key,
- Tname char(20) not null,
- Tsex char(2)
-);
---对Tsex添加check约束
-alter table Teacher
-add constraint CK_Tsex check(Tsex='女' or Tsex='男');
-
-insert into Teacher values('2110','谢梦','女');
-insert into Teacher values('2111','苏丽','女');
-insert into Teacher values('2120','刘杰','男');
-insert into Teacher values('2121','乔楚','男');
-insert into Teacher values('2122','王明','男');
-insert into Teacher values('2130','武强','男');
-insert into Teacher values('2131','程晓','男');
-insert into Teacher values('2240','赵婷','女');
-insert into Teacher values('2241','宁露','女');
-insert into Teacher values('2250','曹琦','男');
-insert into Teacher values('2251','孙强','男');
-insert into Teacher values('2360','卢莉','女');
-insert into Teacher values('2361','文欣','女');
-insert into Teacher values('2370','高展','男');
-insert into Teacher values('2371','白云','男');
-insert into Teacher values('2372','孙晓斌','男');
-
 
 --创建Building（宿舍楼）表
 create table Building
@@ -228,6 +144,96 @@ insert into Dormitory values('7#101','7','4','2','6007101');
 insert into Dormitory values('7#102','7','4','4','6007102');
 insert into Dormitory values('7#103','7','4','4','6007103');
 insert into Dormitory values('7#104','7','4','4','6007104');
+
+--创建Student（学生）表
+create table Student
+(Sno char(11) primary key,
+ Sname char(20) not null,
+ Ssex char(2),
+ Sgrade smallint,
+ Sdept char(20),
+ Dno char(6),
+ Scin date,
+  foreign key(Dno) references Dormitory(Dno)
+);
+--对Ssex和Sage添加check约束
+alter table Student
+add constraint CK_Ssex check(Ssex='女' or Ssex='男');
+
+insert into Student values('14010011001','安辰','女',2014,'海洋环境学院','6#101','2014-8-25');
+insert into Student values('14010011002','安琪','女',2014,'海洋环境学院','6#101','2014-8-25');
+insert into Student values('14010011003','陈宇','女',2014,'海洋环境学院','6#102','2014-8-25');
+insert into Student values('14010022001','陈佳玉','女',2014,'海洋环境学院','6#102','2014-8-25');
+insert into Student values('14010022002','董玥','女',2014,'海洋环境学院','6#102','2014-8-25');
+insert into Student values('14010022003','丁强','男',2014,'海洋环境学院','7#101','2014-8-25');
+insert into Student values('14010022004','李勇','男',2014,'海洋环境学院','7#101','2014-8-25');
+insert into Student values('14020011012','梁非凡','男',2014,'信息科学与工程学院','2#102','2014-8-25');
+insert into Student values('14020011013','蒋丞','男',2014,'信息科学与工程学院','2#102','2014-8-25');
+insert into Student values('15020012001','顾飞','男',2015,'信息科学与工程学院','2#102','2015-8-25');
+insert into Student values('15020011033','詹永旭','男',2015,'信息科学与工程学院','2#103','2015-8-25');
+insert into Student values('14020031015','王敏','女',2014,'信息科学与工程学院','1#101','2014-8-25');
+insert into Student values('16020041002','陈冬','女',2016,'信息科学与工程学院','1#102','2016-8-25');
+insert into Student values('17020023005','李楠','女',2017,'信息科学与工程学院','1#102','2017-8-25');
+insert into Student values('15020032010','刘渊晨','女',2015,'信息科学与工程学院','1#101','2015-8-25');
+insert into Student values('15020032009','刘艺语','女',2015,'信息科学与工程学院','1#102','2015-8-25');
+insert into Student values('15020031042','刘峰','男',2015,'信息科学与工程学院','2#101','2015-8-25');
+insert into Student values('15020031048','刘真','男',2015,'信息科学与工程学院','2#102','2015-8-25');
+insert into Student values('15020031108','张庆渝','男',2015,'信息科学与工程学院','2#103','2015-8-25');
+insert into Student values('15110041008','李悦','女',2015,'管理学院','4#101','2015-8-25');
+insert into Student values('15110011002','陈泽鑫','男',2015,'管理学院','5#101','2015-8-25');
+insert into Student values('16110022037','徐帅','男',2016,'管理学院','5#101','2016-8-25');
+insert into Student values('14120011028','张凌云','男',2014,'经济学院','5#102','2014-8-25');
+insert into Student values('15120012009','吴峰','男',2015,'经济学院','5#102','2015-8-25');
+insert into Student values('16120013011','白雪','女',2016,'经济学院','4#102','2016-8-25');
+insert into Student values('16120013013','江浩','男',2016,'经济学院','5#102','2016-8-25');
+insert into Student values('17120014011','沈深','男',2017,'经济学院','5#102','2017-8-25');
+insert into Student values('14090021027','李然','男',2014,'工程学院','3#101','2014-8-25');
+insert into Student values('14090021001','罗亮','男',2014,'工程学院','3#101','2014-8-25');
+insert into Student values('15090032010','张立','男',2015,'工程学院','3#102','2015-8-25');
+insert into Student values('15090032013','刘帆','男',2015,'工程学院','3#102','2015-8-25');
+insert into Student values('16090012014','林诺','女',2016,'工程学院','1#103','2016-8-25');
+insert into Student values('17090011045','张冰洁','女',2017,'工程学院','1#103','2017-8-25');
+insert into Student values('13130011017','齐晓松','男',2013,'外国语学院',null,'2013-8-28');
+insert into Student values('14130031045','叶宏远','男',2014,'外国语学院',null,'2014-8-27');
+insert into Student values('15130052008','李一桐','女',2015,'外国语学院',null,'2015-8-25');
+insert into Student values('16130061005','孙念文','女',2016,'外国语学院',null,'2016-8-26');
+insert into Student values('16130041005','孙雪慧','女',2016,'外国语学院',null,'2016-8-25');
+insert into Student values('16130061015','李琪','女',2016,'外国语学院',null,'2016-8-28');
+insert into Student values('17140023007','郑涛','男',2017,'文学与新闻传播学院',null,'2017-8-29');
+insert into Student values('16140023017','郭晓冉','女',2016,'文学与新闻传播学院',null,'2016-8-25');
+insert into Student values('15140011012','廖佳','女',2015,'文学与新闻传播学院',null,'2015-8-27');
+insert into Student values('15140002009','丁竹心','女',2015,'文学与新闻传播学院',null,'2015-9-1');
+
+
+
+--创建Teacher（教师）表
+create table Teacher
+(Tno char(11) primary key,
+ Tname char(20) not null,
+ Tsex char(2)
+);
+--对Tsex添加check约束
+alter table Teacher
+add constraint CK_Tsex check(Tsex='女' or Tsex='男');
+
+insert into Teacher values('2110','谢梦','女');
+insert into Teacher values('2111','苏丽','女');
+insert into Teacher values('2120','刘杰','男');
+insert into Teacher values('2121','乔楚','男');
+insert into Teacher values('2122','王明','男');
+insert into Teacher values('2130','武强','男');
+insert into Teacher values('2131','程晓','男');
+insert into Teacher values('2240','赵婷','女');
+insert into Teacher values('2241','宁露','女');
+insert into Teacher values('2250','曹琦','男');
+insert into Teacher values('2251','孙强','男');
+insert into Teacher values('2360','卢莉','女');
+insert into Teacher values('2361','文欣','女');
+insert into Teacher values('2370','高展','男');
+insert into Teacher values('2371','白云','男');
+insert into Teacher values('2372','孙晓斌','男');
+
+
 
 --创建Asset（财产）表
 create table Asset
@@ -354,58 +360,7 @@ insert into Repairs values('2#103','1','2015-9-19','床板坏惹','2015-9-19');
 insert into Repairs values('2#103','7','2017-12-1','洗衣机不工作惹',null);
 insert into Repairs values('2#103','9','2017-12-28','电扇不转惹',null);
 
---创建SD（学生宿舍关系）表
-create table SD
-(Sno char(11) primary key,
- Dno char(6),
- Scin date,
- foreign key(Sno) references Student(Sno),
- foreign key(Dno) references Dormitory(Dno)
-);
 
-insert into SD values('14010011001','6#101','2014-8-25');
-insert into SD values('14010011002','6#101','2014-8-25');
-insert into SD values('14010011003','6#102','2014-8-25');
-insert into SD values('14010022001','6#102','2014-8-25');
-insert into SD values('14010022002','6#102','2014-8-25');
-insert into SD values('14010022003','7#101','2014-8-25');
-insert into SD values('14010022004','7#101','2014-8-25');
-insert into SD values('14020011012','2#102','2014-8-25');
-insert into SD values('14020011013','2#102','2014-8-25');
-insert into SD values('15020012001','2#102','2015-8-25');
-insert into SD values('15020011033','2#103','2015-8-25');
-insert into SD values('14020031015','1#101','2014-8-25');
-insert into SD values('16020041002','1#102','2016-8-25');
-insert into SD values('17020023005','1#102','2017-8-25');
-insert into SD values('15020032010','1#101','2015-8-25');
-insert into SD values('15020032009','1#102','2015-8-25');
-insert into SD values('15020031042','2#101','2015-8-25');
-insert into SD values('15020031048','2#102','2015-8-25');
-insert into SD values('15020031108','2#103','2015-8-25');
-insert into SD values('15110041008','4#101','2015-8-25');
-insert into SD values('15110011002','5#101','2015-8-25');
-insert into SD values('16110022037','5#101','2016-8-25');
-insert into SD values('14120011028','5#102','2014-8-25');
-insert into SD values('15120012009','5#102','2015-8-25');
-insert into SD values('16120013011','4#102','2016-8-25');
-insert into SD values('16120013013','5#102','2016-8-25');
-insert into SD values('17120014011','5#102','2017-8-25');
-insert into SD values('14090021027','3#101','2014-8-25');
-insert into SD values('14090021001','3#101','2014-8-25');
-insert into SD values('15090032010','3#102','2015-8-25');
-insert into SD values('15090032013','3#102','2015-8-25');
-insert into SD values('16090012014','1#103','2016-8-25');
-insert into SD values('17090011045','1#103','2017-8-25');
-insert into SD values('13130011017',null,null);
-insert into SD values('14130031045',null,null);
-insert into SD values('15130052008',null,null);
-insert into SD values('16130061005',null,null);
-insert into SD values('16130041005',null,null);
-insert into SD values('16130061015',null,null);
-insert into SD values('17140023007',null,null);
-insert into SD values('16140023017',null,null);
-insert into SD values('15140011012',null,null);
-insert into SD values('15140002009',null,null);
 
 
 --创建DT（宿舍管理关系）表
