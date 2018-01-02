@@ -50,5 +50,12 @@ public class AssetBizImpl implements AssetBiz{
 		return (Asset) adao.get(sql, Asset.class, params);
 	}
 
+    @Override
+    public Asset findByAname(String Aname) {
+       String sql = "select * from Asset where Aname = ?";
+		Object[] params = {Aname};
+		return (Asset) adao.get(sql, Asset.class, params);
+    }
+
 
 }

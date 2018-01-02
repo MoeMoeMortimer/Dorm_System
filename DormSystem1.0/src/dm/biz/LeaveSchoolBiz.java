@@ -21,4 +21,8 @@ public interface LeaveSchoolBiz {
 	public List<LeaveSchool> findByCondition(String condition);
         
         public List<LeaveSchool> findByIdDate(String Sno, String st, String ed);
+        
+        public boolean findBySno(String sno);
+        
+        public boolean delelteBySno(String sno);
 }

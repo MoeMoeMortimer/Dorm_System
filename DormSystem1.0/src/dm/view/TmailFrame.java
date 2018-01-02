@@ -27,7 +27,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author Administrator
  */
-public class TmailFrame extends javax.swing.JFrame {
+public class TmailFrame extends javax.swing.JInternalFrame {
     public static User u;
     MailBiz mbiz = new MailBizImpl();
     String Tno = u.getUno();

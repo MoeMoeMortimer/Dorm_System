@@ -56,4 +56,22 @@ public class CurfewBizImpl implements CurfewBiz {
 	Object[] params = {Sno};
 	return  cdao.query(sql, Curfew.class, params);
     }
+    
+    public boolean findBySno(String sno) {
+        String sql = "select * from Curfew where Sno = ?";
+	Object[] params = {sno};
+        List<Curfew> list = cdao.query(sql, Curfew.class, params);
+	if(list.size()!=0) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+        
+    public boolean delelteBySno(String sno) {
+        String sql = "delete from Curfew where Sno = ?";
+        Object[] params = {sno};
+	return cdao.update(sql, params);
+    }
 }

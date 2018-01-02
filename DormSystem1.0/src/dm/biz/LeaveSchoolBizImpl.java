@@ -58,4 +58,22 @@ public class LeaveSchoolBizImpl implements LeaveSchoolBiz {
 	Object[] params = {Sno, st, ed};
 	return sdao.query(sql, LeaveSchool.class, params);
     }
+    
+    public boolean findBySno(String sno) {
+        String sql = "select * from LeaveSchool where Sno = ?";
+	Object[] params = {sno};
+        List<LeaveSchool> list = sdao.query(sql, LeaveSchool.class, params);
+	if(list.size()!=0) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+        
+    public boolean delelteBySno(String sno) {
+        String sql = "delete from LeaveSchool where Sno = ?";
+        Object[] params = {sno};
+	return sdao.update(sql, params);
+    }
 }

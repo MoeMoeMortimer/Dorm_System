@@ -7,8 +7,6 @@ package dm.view;
 
 import dm.biz.LeaveSchoolBiz;
 import dm.biz.LeaveSchoolBizImpl;
-import dm.biz.SDBiz;
-import dm.biz.SDBizImpl;
 import dm.biz.StudentBiz;
 import dm.biz.StudentBizImpl;
 import dm.biz.tStuLeaveBiz;
@@ -38,7 +36,7 @@ public class TstuLeaveFrame extends javax.swing.JInternalFrame {
      */
     tStuLeaveBiz lsbiz= new tStuLeaveBizImpl();
     StudentBiz sbiz = new StudentBizImpl();
-    SDBiz sdbiz = new SDBizImpl();
+    
     LeaveSchoolBiz LSdao= new LeaveSchoolBizImpl();
     public TstuLeaveFrame() {
         initComponents();
@@ -403,10 +401,10 @@ public class TstuLeaveFrame extends javax.swing.JInternalFrame {
         ClearInput();
         String Sno = this.txtSno.getText().trim();
         // 查询学生信息S
-        Student s = sbiz.findById(Sno);
+        Student s = sbiz.findBySno(Sno);
         this.txtSname.setText(s.getSname()+"");
-        SD sd = sdbiz.findById(Sno);
-        this.txtDno.setText(sd.getDno()+"");
+        
+        this.txtDno.setText(s.getDno()+"");
         this.btnLeave.setEnabled(true);
         this.btnReturn.setEnabled(false);
         this.btnDelete.setEnabled(false);

@@ -17,6 +17,7 @@ public interface AssetBiz {
 
 	public Asset findById(String Ano);
 
+        public Asset findByAname(String Aname);
 
 	public List<Asset> findAll();
 

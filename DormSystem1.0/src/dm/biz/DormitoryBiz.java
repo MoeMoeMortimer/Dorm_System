@@ -22,7 +22,10 @@ public interface DormitoryBiz {
         
 	public Dormitory findById(String dno);
 	
-
+        public List<Dormitory> findByBno(String bno);
+        
+        public List<Dormitory> findByDsurplus(String Dsurplus);
+        
 	public List<Dormitory> findAll();
 	
 

@@ -5,8 +5,7 @@
  */
 package dm.view;
 
-import dm.biz.SDBiz;
-import dm.biz.SDBizImpl;
+
 import dm.biz.SmyAssetBiz;
 import dm.biz.SmyAssetBizImpl;
 import dm.biz.SmyDormBiz;
@@ -36,12 +35,10 @@ public class SmyDormFrame extends javax.swing.JInternalFrame {
      */
     public static User u;
     public static StudentBiz sbiz = new StudentBizImpl();
-    public Student s = sbiz.findById(u.getUno());
+    public Student s = sbiz.findBySno(u.getUno());
     SmyDormBiz sd = new SmyDormBizImpl();
     SmyAssetBiz sa = new SmyAssetBizImpl();
-    SDBiz sdb = new SDBizImpl();
-    public String Dno= sdb.findById(s.getSno()).getDno();
-    public SmyDorm smd = sd.findById(Dno);;
+    public SmyDorm smd = sd.findById(s.getDno());
   
     
     
@@ -51,8 +48,8 @@ public class SmyDormFrame extends javax.swing.JInternalFrame {
         this.txtDno.setText(smd.getDno());
         this.txtDtel.setText(smd.getDtel());
         this.txtBtime.setText(smd.getBtime());
-        this.txtScin.setText(sdb.findById(s.getSno()).getScin().toString());
-        List<SmyAsset> list = sa.findById(Dno);
+        this.txtScin.setText(s.getScin().toString());
+        List<SmyAsset> list = sa.findById(s.getDno());
         showOnTable(list);
         LocationUtil.setScreenCenter(this);
     }

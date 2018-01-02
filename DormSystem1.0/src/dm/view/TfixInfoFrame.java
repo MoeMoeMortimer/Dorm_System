@@ -9,10 +9,12 @@ import dm.biz.tFixInfoBiz;
 import dm.biz.tFixInfoBizImpl;
 import dm.util.LocationUtil;
 import dm.util.StringUtil;
+
 import dm.vo.tFixInfo;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -70,6 +72,7 @@ public class TfixInfoFrame extends javax.swing.JInternalFrame {
         btnCancel = new javax.swing.JButton();
         btnQuit = new javax.swing.JButton();
         txtAname = new javax.swing.JTextField();
+        chart = new javax.swing.JButton();
 
         setClosable(true);
         setIconifiable(true);
@@ -172,6 +175,13 @@ public class TfixInfoFrame extends javax.swing.JInternalFrame {
 
         txtAname.setEditable(false);
 
+        chart.setText("生成图表");
+        chart.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chartActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -193,7 +203,9 @@ public class TfixInfoFrame extends javax.swing.JInternalFrame {
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(152, 152, 152)
+                                        .addGap(45, 45, 45)
+                                        .addComponent(chart)
+                                        .addGap(26, 26, 26)
                                         .addComponent(btnLoad))
                                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                                         .addGap(20, 20, 20)
@@ -275,7 +287,8 @@ public class TfixInfoFrame extends javax.swing.JInternalFrame {
                     .addComponent(btnDelete)
                     .addComponent(btnSave)
                     .addComponent(btnCancel)
-                    .addComponent(btnQuit))
+                    .addComponent(btnQuit)
+                    .addComponent(chart))
                 .addContainerGap(25, Short.MAX_VALUE))
         );
 
@@ -427,6 +440,15 @@ public class TfixInfoFrame extends javax.swing.JInternalFrame {
         this.dispose();
     }//GEN-LAST:event_btnQuitActionPerformed
 
+    private void chartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chartActionPerformed
+        List<tFixInfo> list = tbiz.findAll();
+        HashMap<String, Integer> map = generateChart(list);
+        
+        FixChartBuilder chart = new FixChartBuilder("宿舍易损物品统计", map);
+        chart.pack();
+        chart.setVisible(true);
+    }//GEN-LAST:event_chartActionPerformed
+
     //将指定的list数据显示到表上
     public void showOnTable(List<tFixInfo> list){
         //将指定的list数据显示到表上
@@ -458,6 +480,23 @@ public class TfixInfoFrame extends javax.swing.JInternalFrame {
         this.txtReportReason.setText(""); 
         this.txtFixTime.setText("");
     }
+    
+    public HashMap<String, Integer> generateChart(List<tFixInfo> list){
+        HashMap<String, Integer> map = new HashMap<String, Integer>();
+        for(tFixInfo t : list){
+            String ano = t.getAno();
+            if(map.containsKey(t.getAno())){
+                Integer newint = map.get(ano)+1;
+                map.remove(ano);
+                map.put(ano, newint);
+            }
+            else {
+                map.put(ano, 1);
+            }
+        }
+        return map;
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnCancel;
@@ -466,6 +505,7 @@ public class TfixInfoFrame extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnQuit;
     private javax.swing.JButton btnSave;
     private javax.swing.JButton btnSearch;
+    private javax.swing.JButton chart;
     private javax.swing.JComboBox cobCondition;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

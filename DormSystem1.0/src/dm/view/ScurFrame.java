@@ -7,8 +7,6 @@ package dm.view;
 
 import dm.biz.CurfewBiz;
 import dm.biz.CurfewBizImpl;
-import dm.biz.SDBiz;
-import dm.biz.SDBizImpl;
 import dm.biz.StudentBiz;
 import dm.biz.StudentBizImpl;
 import dm.po.User;
@@ -26,7 +24,6 @@ public class ScurFrame extends javax.swing.JInternalFrame {
     public static User u;
     String sno = this.u.getUno();
     CurfewBiz cbiz = new CurfewBizImpl();
-    SDBiz sd = new SDBizImpl();
     StudentBiz sbiz = new StudentBizImpl();
     
     /**
@@ -36,8 +33,8 @@ public class ScurFrame extends javax.swing.JInternalFrame {
 
         initComponents();
         this.txtSno.setText(sno);
-        this.txtSname.setText(sbiz.findById(sno).getSname());
-        this.txtDno.setText(sd.findById(sno).getDno());
+        this.txtSname.setText(sbiz.findBySno(sno).getSname());
+        this.txtDno.setText(sbiz.findBySno(sno).getDno());
        
     }
 

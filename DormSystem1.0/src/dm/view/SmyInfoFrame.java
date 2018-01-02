@@ -23,7 +23,7 @@ public class SmyInfoFrame extends javax.swing.JInternalFrame {
     public static User u; 
     //引入biz
     StudentBiz sbiz = new StudentBizImpl();
-    public Student s = sbiz.findById(u.getUno());
+    public Student s = sbiz.findBySno(u.getUno());
     
     
     public SmyInfoFrame() {

@@ -1,23 +1,28 @@
 package dm.po;
 
+import java.sql.Date;
+
 public class Student {
     private String Sno;
     private String Sname;
     private String Ssex;
 	private Integer Sgrade;
     private String Sdept;
-    public Student(String sno, String sname, String ssex, Integer sgrade, String sdept) {
-		super();
-		this.Sno = sno;
-		this.Sname = sname;
-		this.Ssex = ssex;
-		this.Sgrade = sgrade;
-		this.Sdept = sdept;
-	}
-    
-    
+    private String Dno;
+    private Date Scin;
 	public Student() {
 		super();
+		// TODO Auto-generated constructor stub
+	}
+	public Student(String sno, String sname, String ssex, Integer sgrade, String sdept, String dno, Date scin) {
+		super();
+		Sno = sno;
+		Sname = sname;
+		Ssex = ssex;
+		Sgrade = sgrade;
+		Sdept = sdept;
+		Dno = dno;
+		Scin = scin;
 	}
 	public String getSno() {
 		return Sno;
@@ -49,5 +54,19 @@ public class Student {
 	public void setSdept(String sdept) {
 		Sdept = sdept;
 	}
+	public String getDno() {
+		return Dno;
+	}
+	public void setDno(String dno) {
+		Dno = dno;
+	}
+	public Date getScin() {
+		return Scin;
+	}
+	public void setScin(Date scin) {
+		Scin = scin;
+	}
+	
+    
 
 }

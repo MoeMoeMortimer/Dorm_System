@@ -4,13 +4,20 @@
  * and open the template in the editor.
  */
 package dm.view;
-import dm.biz.tManageStuBiz;
-import dm.biz.tManageStuBizImpl;
+
+import dm.biz.CurfewBiz;
+import dm.biz.CurfewBizImpl;
 import dm.biz.DormitoryBiz;
 import dm.biz.DormitoryBizImpl;
+import dm.biz.LeaveSchoolBiz;
+import dm.biz.LeaveSchoolBizImpl;
+import dm.biz.MailBiz;
+import dm.biz.MailBizImpl;
 import dm.po.Dormitory;
+import dm.biz.StudentBiz;
+import dm.biz.StudentBizImpl;
+import dm.po.Student;
 import dm.util.FrameUtil;
-import dm.vo.tManageStu;
 import dm.util.StringUtil;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
@@ -26,12 +33,16 @@ import javax.swing.table.DefaultTableModel;
  * @author 晨晨
  */
 public class TmanageStuFrame extends javax.swing.JInternalFrame {
-    tManageStuBiz sbiz = new tManageStuBizImpl();
+    StudentBiz sbiz = new StudentBizImpl();
     DormitoryBiz dbiz = new DormitoryBizImpl();
+    CurfewBiz cbiz = new CurfewBizImpl();
+    LeaveSchoolBiz lbiz = new LeaveSchoolBizImpl();
+    MailBiz mbiz = new MailBizImpl();
+    String oldSno;
+    
     /**
      * Creates new form TmanageStuFrame
      */
-    String shortname;
     
     
     /*public static Date strToDate(String strDate) {
@@ -43,9 +54,10 @@ public class TmanageStuFrame extends javax.swing.JInternalFrame {
     */
     public TmanageStuFrame() {
         initComponents();
-        this.btnAdd.setEnabled(false);
-        this.btnAssigned.setEnabled(false);
-        this.btnDisassign.setEnabled(false);
+        this.btnDelete.setEnabled(false);
+        this.btnUpdate.setEnabled(false);
+        List<Dormitory> list1 = dbiz.findDormitory();
+        showOnTable1(list1);
         //this.btnAssigned.setEnabled(false);
         //this.btnDisassign.setEnabled(false);
         //this.yearBox.setEnabled(false);
@@ -70,8 +82,6 @@ public class TmanageStuFrame extends javax.swing.JInternalFrame {
         txtCondition = new javax.swing.JTextField();
         btnLoad = new javax.swing.JButton();
         btnAdd = new javax.swing.JButton();
-        btnAssigned = new javax.swing.JButton();
-        btnDisassign = new javax.swing.JButton();
         btnCancel = new javax.swing.JButton();
         btnQuit = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
@@ -79,18 +89,13 @@ public class TmanageStuFrame extends javax.swing.JInternalFrame {
         jLabel2 = new javax.swing.JLabel();
         txtSname = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        txtSsex = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        txtSgrade = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        txtSdept = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         txtDno = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         txtScin = new javax.swing.JTextField();
-        startDate = new com.ouc.cpss.util.DateChooserJButton();
-        endDate = new com.ouc.cpss.util.DateChooserJButton();
         btnScin = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         tabDormitory = new javax.swing.JTable();
@@ -98,6 +103,18 @@ public class TmanageStuFrame extends javax.swing.JInternalFrame {
         jLabel8 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         txtDnoNew = new javax.swing.JTextField();
+        jLabel11 = new javax.swing.JLabel();
+        txtNewScin = new javax.swing.JTextField();
+        btnDelete = new javax.swing.JButton();
+        btnUpdate = new javax.swing.JButton();
+        cobCondition1 = new javax.swing.JComboBox();
+        txtCondition1 = new javax.swing.JTextField();
+        btnSearch1 = new javax.swing.JButton();
+        startDate = new com.ouc.cpss.util.DateChooserJButton();
+        endDate = new com.ouc.cpss.util.DateChooserJButton();
+        sex = new javax.swing.JComboBox();
+        grade = new javax.swing.JComboBox();
+        dept = new javax.swing.JComboBox();
 
         setClosable(true);
         setIconifiable(true);
@@ -160,24 +177,10 @@ public class TmanageStuFrame extends javax.swing.JInternalFrame {
             }
         });
 
-        btnAdd.setText("分配");
+        btnAdd.setText("增加");
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddActionPerformed(evt);
-            }
-        });
-
-        btnAssigned.setText("已分配");
-        btnAssigned.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAssignedActionPerformed(evt);
-            }
-        });
-
-        btnDisassign.setText("未分配");
-        btnDisassign.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDisassignActionPerformed(evt);
             }
         });
 
@@ -197,23 +200,13 @@ public class TmanageStuFrame extends javax.swing.JInternalFrame {
 
         jLabel1.setText("学号：");
 
-        txtSno.setEditable(false);
-
         jLabel2.setText("姓名：");
-
-        txtSname.setEditable(false);
 
         jLabel3.setText("性别：");
 
-        txtSsex.setEditable(false);
-
         jLabel4.setText("年级：");
 
-        txtSgrade.setEditable(false);
-
         jLabel5.setText("院系：");
-
-        txtSdept.setEditable(false);
 
         jLabel6.setText("原宿舍号：");
 
@@ -221,7 +214,7 @@ public class TmanageStuFrame extends javax.swing.JInternalFrame {
 
         jLabel9.setText("--");
 
-        jLabel7.setText("入住时间：");
+        jLabel7.setText("原入住时间：");
 
         txtScin.setEditable(false);
 
@@ -263,18 +256,51 @@ public class TmanageStuFrame extends javax.swing.JInternalFrame {
 
         txtDnoNew.setEditable(false);
 
+        jLabel11.setText("新入住时间：");
+
+        txtNewScin.setEditable(false);
+
+        btnDelete.setText("删除");
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
+
+        btnUpdate.setText("修改");
+        btnUpdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateActionPerformed(evt);
+            }
+        });
+
+        cobCondition1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "全部", "按宿舍号", "按宿舍楼号", "按所剩空位" }));
+
+        btnSearch1.setText("查询");
+        btnSearch1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearch1ActionPerformed(evt);
+            }
+        });
+
+        sex.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "男", "女" }));
+
+        grade.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "2017", "2016", "2015", "2014" }));
+
+        dept.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "信息科学与工程学院", "海洋环境学院", "管理学院", "经济学院", "工程学院", "外国语学院", "文学与新闻传播学院" }));
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(39, 39, 39)
-                .addComponent(startDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
+                .addComponent(startDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel9)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(endDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnScin, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(cobCondition, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -283,42 +309,6 @@ public class TmanageStuFrame extends javax.swing.JInternalFrame {
                 .addGap(18, 18, 18)
                 .addComponent(btnSearch)
                 .addGap(23, 23, 23))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel7)
-                    .addComponent(jLabel1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(txtSgrade, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(75, 75, 75)
-                                .addComponent(jLabel5))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(txtSno, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(75, 75, 75)
-                                .addComponent(jLabel2)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtSname, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtSdept, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(txtScin, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel10)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(txtSsex, javax.swing.GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE)
-                    .addComponent(txtDno, javax.swing.GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE)
-                    .addComponent(txtDnoNew))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addComponent(jScrollPane1)
                 .addContainerGap())
@@ -327,22 +317,71 @@ public class TmanageStuFrame extends javax.swing.JInternalFrame {
                 .addContainerGap())
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel8)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(280, 280, 280)
+                        .addGap(304, 304, 304)
                         .addComponent(btnLoad)
                         .addGap(18, 18, 18)
                         .addComponent(btnAdd)
                         .addGap(18, 18, 18)
-                        .addComponent(btnAssigned)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnDisassign, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnDelete)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnUpdate)
                         .addGap(18, 18, 18)
                         .addComponent(btnCancel)
                         .addGap(18, 18, 18)
-                        .addComponent(btnQuit))
-                    .addComponent(label)
-                    .addComponent(jLabel8))
+                        .addComponent(btnQuit)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(44, 44, 44)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel5))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(grade, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(txtSno, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE))
+                    .addComponent(dept, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtSname, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel11)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtNewScin, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtScin, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(70, 70, 70)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(sex, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel10)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtDnoNew, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtDno, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(44, 44, 44))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(label)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(cobCondition1, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(26, 26, 26)
+                .addComponent(txtCondition1, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btnSearch1)
+                .addGap(22, 22, 22))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -353,48 +392,56 @@ public class TmanageStuFrame extends javax.swing.JInternalFrame {
                     .addComponent(cobCondition, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtCondition, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel9)
+                    .addComponent(btnScin)
                     .addComponent(startDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(endDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnScin))
+                    .addComponent(endDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(1, 1, 1)
                 .addComponent(jLabel8)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(label)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cobCondition1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtCondition1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSearch1)
+                    .addComponent(label))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(28, 28, 28)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(txtSno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2)
                     .addComponent(txtSname, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtSsex, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3))
+                    .addComponent(jLabel3)
+                    .addComponent(sex, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(txtSgrade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5)
-                    .addComponent(txtSdept, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6)
-                    .addComponent(txtDno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtDno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtScin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7)
-                    .addComponent(jLabel10)
-                    .addComponent(txtDnoNew, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(grade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel10)
+                        .addComponent(txtDnoNew, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel11)
+                        .addComponent(txtNewScin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel5)
+                        .addComponent(dept, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(38, 38, 38)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnLoad)
                     .addComponent(btnAdd)
-                    .addComponent(btnAssigned)
-                    .addComponent(btnDisassign)
+                    .addComponent(btnDelete)
+                    .addComponent(btnUpdate)
                     .addComponent(btnCancel)
                     .addComponent(btnQuit))
-                .addGap(217, 217, 217))
+                .addGap(287, 287, 287))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -407,77 +454,65 @@ public class TmanageStuFrame extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 659, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 704, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    //查找
+    //查找学生
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
         switch(this.cobCondition.getSelectedIndex()){
             case 0:
-                List <tManageStu> list0 = new ArrayList();
+                List <Student> list0 = new ArrayList();
                 list0.add(sbiz.findBySno(this.txtCondition.getText().trim()));
                 showOnTable(list0);             
                 break;
             case 1:
-                List<tManageStu> list1 = sbiz.findBySname(this.txtCondition.getText().trim());
+                List<Student> list1 = sbiz.findBySname(this.txtCondition.getText().trim());
                 showOnTable(list1);
                 break;
             case 2:
-                List<tManageStu> list2 = sbiz.findBySsex(this.txtCondition.getText().trim());
+                List<Student> list2 = sbiz.findBySsex(this.txtCondition.getText().trim());
                 showOnTable(list2);
                 break;
             case 3:
-                List<tManageStu> list3 = sbiz.findBySgrade(this.txtCondition.getText().trim());
+                List<Student> list3 = sbiz.findBySgrade(this.txtCondition.getText().trim());
                 showOnTable(list3);
                 break;
             case 4:
-                List<tManageStu> list4 = sbiz.findBySdept(this.txtCondition.getText().trim());
+                List<Student> list4 = sbiz.findBySdept(this.txtCondition.getText().trim());
                 showOnTable(list4);
                 break;
             case 5:
-                List<tManageStu> list5 = sbiz.findByDno(this.txtCondition.getText().trim());
+                List<Student> list5 = sbiz.findByDno(this.txtCondition.getText().trim());
                 showOnTable(list5);
                 break;
             case 6:
-                List<tManageStu> list7 = sbiz.findByCondition(this.txtCondition.getText().trim());
+                List<Student> list7 = sbiz.findByCondition(this.txtCondition.getText().trim());
                 showOnTable(list7);
                 break;
-                /*
-                String startDate = this.startDate.getText();
-                String endDate = this.endDate.getText();
-                List<tManageStu> list6 = sbiz.findByScin(startDate, endDate);
-                showOnTable(list6);
-                break;
-                */
             default:
                 JOptionPane.showMessageDialog(this, "错误！");
         }
     }//GEN-LAST:event_btnSearchActionPerformed
     //载入
     private void btnLoadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoadActionPerformed
-        this.btnAssigned.setEnabled(true);
-        this.btnDisassign.setEnabled(true);
-        List<tManageStu> list = sbiz.findAll();
+        List<Student> list = sbiz.findAll();
         showOnTable(list);
-        List<Dormitory> list1 = dbiz.findDormitory();
-        showOnTable1(list1);
     }//GEN-LAST:event_btnLoadActionPerformed
     //重置
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
         clearIput();
     }//GEN-LAST:event_btnCancelActionPerformed
-    //增加新分配
+    //增加
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+        /*
         String Sno = this.txtSno.getText().trim();
         String Sname = this.txtSname.getText().trim();
         String Ssex = this.txtSsex.getText().trim();
         String Sgrade = this.txtSgrade.getText().trim();
         String Sdept = this.txtSdept.getText().trim();
-        String oldDno = this.txtDno.getText();
-        System.out.println(oldDno);
+        String oldDno = this.txtDno.getText().trim();
         String newDno = this.txtDnoNew.getText().trim();
         if("null".equals(oldDno)) {
             java.sql.Date currentDate = new java.sql.Date(System.currentTimeMillis());
@@ -498,7 +533,7 @@ public class TmanageStuFrame extends javax.swing.JInternalFrame {
                 return ;
             }
         }
-        else {
+        else if(!newDno.equals(oldDno)){
             java.sql.Date currentDate = new java.sql.Date(System.currentTimeMillis());
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
             formatter.format(currentDate);
@@ -518,32 +553,81 @@ public class TmanageStuFrame extends javax.swing.JInternalFrame {
                 return ;
             }
         }
+        else {
+            JOptionPane.showMessageDialog(this, "无效操作！");
+        }
         this.btnAdd.setEnabled(false);
         clearIput();
+        */
+        String Sno = this.txtSno.getText().trim();
+        String Sname = this.txtSname.getText().trim();
+        String Ssex = this.sex.getSelectedItem().toString();
+        Integer Sgrade = Integer.parseInt(this.grade.getSelectedItem().toString());
+        String Sdept = this.dept.getSelectedItem().toString();
+        String newDno = this.txtDnoNew.getText().trim();
+        if(StringUtil.checkLength(Sno)==false) {
+            JOptionPane.showMessageDialog(this, "学号不能为空！");
+            return ;
+        }
+        else if(sbiz.findStudent(Sno)) {
+            JOptionPane.showMessageDialog(this, "该学号已存在！");
+            return ;
+        }
+        else if(StringUtil.checkLength(Sname)==false) {
+            JOptionPane.showMessageDialog(this, "姓名不能为空！");
+            return ;
+        }
+        else if(StringUtil.checkLength(Ssex)==false) {
+            JOptionPane.showMessageDialog(this, "性别不能为空！");
+            return ;
+        }
+        else if(StringUtil.checkLength(Sgrade.toString())==false) {
+            JOptionPane.showMessageDialog(this, "年级不能为空！");
+            return ;
+        }
+        else if(StringUtil.checkLength(Sdept)==false) {
+            JOptionPane.showMessageDialog(this, "院系不能为空！");
+            return ;
+        }
+        else if(StringUtil.checkLength(newDno)==false) {
+            JOptionPane.showMessageDialog(this, "宿舍号不能为空！");
+            return ;
+        }
+        java.sql.Date date = java.sql.Date.valueOf(this.txtNewScin.getText().trim());
+        Student s = new Student(Sno,Sname,Ssex,Sgrade,Sdept,newDno,date);
+        boolean result = sbiz.add(s);
+        boolean sub = dbiz.updateSub(newDno);
+        if(result == true&&sub==true) {
+            JOptionPane.showMessageDialog(this, "添加成功");
+            List<Student> list = sbiz.findAll(); 
+            showOnTable(list);
+            List<Dormitory> list1 = dbiz.findDormitory();
+            showOnTable1(list1);
+        }else{
+            JOptionPane.showMessageDialog(this, "添加失败");
+        }
+        clearIput();
+        this.btnDelete.setEnabled(false);
+        this.btnUpdate.setEnabled(false);
     }//GEN-LAST:event_btnAddActionPerformed
-    //显示已分配
-    private void btnAssignedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAssignedActionPerformed
-        List<tManageStu> list = sbiz.findAssigned();
-        showOnTable(list);
-    }//GEN-LAST:event_btnAssignedActionPerformed
-    //表1的鼠标事件
+
+   //表1的鼠标事件
     private void tabStudentMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabStudentMouseClicked
         int row = this.tabStudent.getSelectedRow();
         this.txtSno.setText(this.tabStudent.getValueAt(row,0)+"");
-        //shortname = this.tabStudent.getValueAt(row,0)+"";
+        oldSno = this.tabStudent.getValueAt(row,0)+"";
         this.txtSname.setText(this.tabStudent.getValueAt(row,1)+"");
-        this.txtSsex.setText(this.tabStudent.getValueAt(row,2)+"");
-        this.txtSgrade.setText(this.tabStudent.getValueAt(row,3)+"");
-        this.txtSdept.setText(this.tabStudent.getValueAt(row,4)+"");
+        this.sex.setSelectedItem(this.tabStudent.getValueAt(row,2)+"");
+        this.grade.setSelectedItem(this.tabStudent.getValueAt(row,3)+"");
+        this.dept.setSelectedItem(this.tabStudent.getValueAt(row,4)+"");
         this.txtDno.setText(this.tabStudent.getValueAt(row,5)+"");
         this.txtScin.setText(this.tabStudent.getValueAt(row,6)+"");
+        this.btnDelete.setEnabled(true);
+        this.btnUpdate.setEnabled(true);
+        this.txtSno.setEditable(false);
     }//GEN-LAST:event_tabStudentMouseClicked
-    //显示未分配
-    private void btnDisassignActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDisassignActionPerformed
-        List<tManageStu> list = sbiz.findDisAssigned();
-        showOnTable(list);
-    }//GEN-LAST:event_btnDisassignActionPerformed
-    //退出
+
+   //退出
     private void btnQuitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitActionPerformed
         FrameUtil.framemap.remove(TmanageStuFrame.class.getName());
         this.dispose();
@@ -562,7 +646,7 @@ public class TmanageStuFrame extends javax.swing.JInternalFrame {
 		JOptionPane.showMessageDialog(this, "时间区间不对！");
 	}
         else {
-            List<tManageStu> list6 = sbiz.findByScin(startDate, endDate);
+            List<Student> list6 = sbiz.findByScin(startDate, endDate);
             showOnTable(list6);
         }
         
@@ -571,13 +655,163 @@ public class TmanageStuFrame extends javax.swing.JInternalFrame {
     private void tabDormitoryMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabDormitoryMouseClicked
         int row = this.tabDormitory.getSelectedRow();
         this.txtDnoNew.setText(this.tabDormitory.getValueAt(row,0).toString().trim());
-        this.btnAdd.setEnabled(true);
+        java.sql.Date currentDate = new java.sql.Date(System.currentTimeMillis());
+        this.txtNewScin.setText(currentDate.toString());
+        
     }//GEN-LAST:event_tabDormitoryMouseClicked
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        int answer = JOptionPane.showConfirmDialog(this, "该学生相关信息记录也会被删除，您确定要删除吗？");
+        if(answer == JOptionPane.YES_OPTION){           
+            String oldSno = this.txtSno.getText().trim();
+            if(cbiz.findBySno(oldSno)==true) {
+                if(!cbiz.delelteBySno(oldSno)) {
+                    JOptionPane.showMessageDialog(this, "夜归信息删除失败");
+                    clearIput();
+                    this.btnDelete.setEnabled(false);
+                    this.btnUpdate.setEnabled(false);
+                    return;
+                }
+            }
+            if(lbiz.findBySno(oldSno)) {
+                if(!lbiz.delelteBySno(oldSno)) {
+                    JOptionPane.showMessageDialog(this, "离校信息删除失败");
+                    clearIput();
+                    this.btnDelete.setEnabled(false);
+                    this.btnUpdate.setEnabled(false);
+                    return;
+                }
+            }
+            if(mbiz.findBySno(oldSno)) {
+                if(!mbiz.deleteBySno(oldSno)) {
+                    JOptionPane.showMessageDialog(this, "快递信息删除失败");
+                    clearIput();
+                    this.btnDelete.setEnabled(false);
+                    this.btnUpdate.setEnabled(false);
+                    return;
+                }
+            }
+            boolean result = sbiz.delete(oldSno);
+            if(result == true&&dbiz.updateAdd(this.txtDno.getText().trim())){
+                JOptionPane.showMessageDialog(this, "删除成功");
+                List<Student> list = sbiz.findAll(); 
+                showOnTable(list);
+                List<Dormitory> list1 = dbiz.findDormitory();
+                showOnTable1(list1);
+            }else{
+                 JOptionPane.showMessageDialog(this, "学生信息删除失败");
+            }
+            clearIput();
+            this.btnDelete.setEnabled(false);
+            this.btnUpdate.setEnabled(false);
+            this.txtSno.setEditable(true);
+        }
+    }//GEN-LAST:event_btnDeleteActionPerformed
+
+    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+        String Sno = this.txtSno.getText().trim();
+        String Sname = this.txtSname.getText().trim();
+        String Ssex = this.sex.getSelectedItem().toString();
+        Integer Sgrade = Integer.parseInt(this.grade.getSelectedItem().toString());
+        String Sdept = this.dept.getSelectedItem().toString();
+        String newDno = this.txtDnoNew.getText().trim();
+        String oldDno = this.txtDno.getText().trim();
+        String oldScin = this.txtScin.getText().trim();
+        String newScin = this.txtNewScin.getText().trim();
+        if(StringUtil.checkLength(Sno)==false) {
+            JOptionPane.showMessageDialog(this, "学号不能为空！");
+            return ;
+        }
+        else if(sbiz.findStudent(Sno)&&!Sno.equals(oldSno)) {
+            JOptionPane.showMessageDialog(this, "该学号已存在！");
+            return ;
+        }
+        else if(StringUtil.checkLength(Sname)==false) {
+            JOptionPane.showMessageDialog(this, "姓名不能为空！");
+            return ;
+        }
+        else if(StringUtil.checkLength(Ssex)==false) {
+            JOptionPane.showMessageDialog(this, "性别不能为空！");
+            return ;
+        }
+        else if(StringUtil.checkLength(Sgrade.toString())==false) {
+            JOptionPane.showMessageDialog(this, "年级不能为空！");
+            return ;
+        }
+        else if(StringUtil.checkLength(Sdept)==false) {
+            JOptionPane.showMessageDialog(this, "院系不能为空！");
+            return ;
+        }
+        Student s;
+        if("".equals(newDno)) {
+            java.sql.Date date = java.sql.Date.valueOf(oldScin);
+            s = new Student(Sno,Sname,Ssex,Sgrade,Sdept,oldDno,date);
+            if(sbiz.update(s,oldSno)) {
+                JOptionPane.showMessageDialog(this, "更新成功！");
+                List<Student> list = sbiz.findAll(); 
+                showOnTable(list);
+                List<Dormitory> list1 = dbiz.findDormitory();
+                showOnTable1(list1);
+            }
+            else{
+                JOptionPane.showMessageDialog(this, "更新失败！");
+            }
+        }
+        else {
+            java.sql.Date date = java.sql.Date.valueOf(newScin);
+            s = new Student(Sno,Sname,Ssex,Sgrade,Sdept,newDno,date);
+            if(sbiz.update(s,oldSno)&&dbiz.updateAdd(oldDno)&&dbiz.updateSub(newDno)) {
+                JOptionPane.showMessageDialog(this, "更新成功！");
+                List<Student> list = sbiz.findAll(); 
+                showOnTable(list);
+            }
+            else{
+                JOptionPane.showMessageDialog(this, "更新失败！");
+            }
+        }
+        /*
+        if(result == true&&sub==true) {
+            JOptionPane.showMessageDialog(this, "添加成功");
+            List<Student> list = sbiz.findAll(); 
+            showOnTable(list);
+        }else{
+            JOptionPane.showMessageDialog(this, "添加失败");
+        }
+        */
+        this.btnDelete.setEnabled(false);
+        this.btnUpdate.setEnabled(false);
+        this.txtSno.setEditable(true);
+        clearIput();
+    }//GEN-LAST:event_btnUpdateActionPerformed
+
+    private void btnSearch1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearch1ActionPerformed
+        switch(this.cobCondition1.getSelectedIndex()){
+            case 0:
+                List<Dormitory> list0 = dbiz.findDormitory();
+                showOnTable1(list0);
+                break;
+            case 1:
+                List <Dormitory> list1 = new ArrayList();
+                list1.add(dbiz.findById(this.txtCondition1.getText().trim()));
+                showOnTable1(list1);             
+                break;
+            case 2:
+                List<Dormitory> list2 = dbiz.findByBno(this.txtCondition1.getText().trim());
+                showOnTable1(list2);
+                break;
+            case 3:
+                List<Dormitory> list3 = dbiz.findByDsurplus(this.txtCondition1.getText().trim());
+                showOnTable1(list3);
+                break;
+            default:
+                JOptionPane.showMessageDialog(this, "错误！");
+        }
+    }//GEN-LAST:event_btnSearch1ActionPerformed
 
    
 
     //展示学生信息表        
-    public void showOnTable(List<tManageStu> list){
+    public void showOnTable(List<Student> list){
         //1.获取指定表格（tblProduct）模型
         DefaultTableModel dtm = 
                 (DefaultTableModel ) this.tabStudent.getModel();
@@ -586,7 +820,7 @@ public class TmanageStuFrame extends javax.swing.JInternalFrame {
             dtm.removeRow(0);
         }
         //3.显示数据
-        for(tManageStu s:list){
+        for(Student s:list){
             Vector vt = new Vector();
             vt.add(s.getSno());
             vt.add(s.getSname());
@@ -621,17 +855,22 @@ public class TmanageStuFrame extends javax.swing.JInternalFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
-    private javax.swing.JButton btnAssigned;
     private javax.swing.JButton btnCancel;
-    private javax.swing.JButton btnDisassign;
+    private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnLoad;
     private javax.swing.JButton btnQuit;
     private javax.swing.JButton btnScin;
     private javax.swing.JButton btnSearch;
+    private javax.swing.JButton btnSearch1;
+    private javax.swing.JButton btnUpdate;
     private javax.swing.JComboBox cobCondition;
+    private javax.swing.JComboBox cobCondition1;
+    private javax.swing.JComboBox dept;
     private com.ouc.cpss.util.DateChooserJButton endDate;
+    private javax.swing.JComboBox grade;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -644,18 +883,18 @@ public class TmanageStuFrame extends javax.swing.JInternalFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel label;
+    private javax.swing.JComboBox sex;
     private com.ouc.cpss.util.DateChooserJButton startDate;
     private javax.swing.JTable tabDormitory;
     private javax.swing.JTable tabStudent;
     private javax.swing.JTextField txtCondition;
+    private javax.swing.JTextField txtCondition1;
     private javax.swing.JTextField txtDno;
     private javax.swing.JTextField txtDnoNew;
+    private javax.swing.JTextField txtNewScin;
     private javax.swing.JTextField txtScin;
-    private javax.swing.JTextField txtSdept;
-    private javax.swing.JTextField txtSgrade;
     private javax.swing.JTextField txtSname;
     private javax.swing.JTextField txtSno;
-    private javax.swing.JTextField txtSsex;
     // End of variables declaration//GEN-END:variables
 
 
@@ -663,12 +902,11 @@ public class TmanageStuFrame extends javax.swing.JInternalFrame {
     private void clearIput() {
         this.txtSno.setText("");
         this.txtSname.setText("");
-        this.txtSsex.setText("");
-        this.txtSgrade.setText("");
-        this.txtSdept.setText("");
         this.txtDno.setText("");
         this.txtScin.setText("");
         this.txtCondition.setText("");
         this.txtDnoNew.setText("");
+        this.txtNewScin.setText("");
+        this.txtCondition1.setText("");
     }
 }

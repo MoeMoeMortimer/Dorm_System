@@ -60,4 +60,15 @@ public class DormitoryBizImpl implements DormitoryBiz{
 			Object[] params = {dno};
 			return (Dormitory) sdao.get(sql, Dormitory.class, params);
 		}
+                public List<Dormitory> findByBno(String bno) {
+                    String sql = "select * from Dormitory where Bno = ? and Dsurplus != 0";
+			Object[] params = {bno};
+			return  sdao.query(sql, Dormitory.class, params);
+                }
+        
+                public List<Dormitory> findByDsurplus(String Dsurplus) {
+                    String sql = "select * from Dormitory where Dsurplus >= ? and Dsurplus != 0";
+			Object[] params = {Dsurplus};
+			return  sdao.query(sql, Dormitory.class, params);
+                }
 }

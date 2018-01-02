@@ -19,5 +19,9 @@ public interface CurfewBiz {
 	public List<Curfew> findAll();
 
 	public List<Curfew> findByCondition(String condition);
+        
+        public boolean findBySno(String sno);
+        
+        public boolean delelteBySno(String sno);
 
 }
