@@ -64,7 +64,11 @@ public class ExportToExcel {
                 //添加每一行内容
                 for(int j = 0; j < n; j++){
                     //获取每一行数据，从第一行开始，第0行是标题
-                    Label id = new Label(j, i+1, myTable.getValueAt(i, j).toString(), format1);
+                    String cell = "";
+                    if(myTable.getValueAt(i, j)!=null){
+                        cell = myTable.getValueAt(i, j).toString();
+                    }
+                    Label id = new Label(j, i+1, cell, format1);
                     sheet1.addCell(id);
                 
                 }

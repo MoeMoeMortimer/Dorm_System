@@ -184,7 +184,8 @@ public class TeacherFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_logoutActionPerformed
 
     private void mailManageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mailManageActionPerformed
-    showFrame(TmailFrame.class);
+        TmailFrame.u = this.u; 
+        showFrame(TmailFrame.class);
     }//GEN-LAST:event_mailManageActionPerformed
         //显示窗体内容
     public void showFrame(Class clazz) {

@@ -17,8 +17,13 @@ import dm.po.Dormitory;
 import dm.biz.StudentBiz;
 import dm.biz.StudentBizImpl;
 import dm.po.Student;
+import dm.util.ExportToExcel;
+import dm.util.FileChooser;
 import dm.util.FrameUtil;
+import dm.util.ImportFromExcel;
 import dm.util.StringUtil;
+import java.io.File;
+import java.io.IOException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -26,6 +31,8 @@ import java.sql.Date;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 /**
@@ -115,6 +122,8 @@ public class TmanageStuFrame extends javax.swing.JInternalFrame {
         sex = new javax.swing.JComboBox();
         grade = new javax.swing.JComboBox();
         dept = new javax.swing.JComboBox();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         setClosable(true);
         setIconifiable(true);
@@ -289,6 +298,20 @@ public class TmanageStuFrame extends javax.swing.JInternalFrame {
 
         dept.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "信息科学与工程学院", "海洋环境学院", "管理学院", "经济学院", "工程学院", "外国语学院", "文学与新闻传播学院" }));
 
+        jButton1.setText("导出报表");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jButton2.setText("批量导入");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -319,7 +342,11 @@ public class TmanageStuFrame extends javax.swing.JInternalFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel8)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(304, 304, 304)
+                        .addGap(106, 106, 106)
+                        .addComponent(jButton2)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton1)
+                        .addGap(18, 18, 18)
                         .addComponent(btnLoad)
                         .addGap(18, 18, 18)
                         .addComponent(btnAdd)
@@ -440,7 +467,9 @@ public class TmanageStuFrame extends javax.swing.JInternalFrame {
                     .addComponent(btnDelete)
                     .addComponent(btnUpdate)
                     .addComponent(btnCancel)
-                    .addComponent(btnQuit))
+                    .addComponent(btnQuit)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2))
                 .addGap(287, 287, 287))
         );
 
@@ -452,9 +481,10 @@ public class TmanageStuFrame extends javax.swing.JInternalFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 704, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 679, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0))
         );
 
         pack();
@@ -808,6 +838,30 @@ public class TmanageStuFrame extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_btnSearch1ActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        File file = FileChooser.newFile(this);
+        boolean answer = ExportToExcel.printTableContent(this.tabStudent, file);
+        if(answer == true){
+            JOptionPane.showMessageDialog(this, "导出成功");
+        } else {
+            JOptionPane.showMessageDialog(this, "导出失败");
+        } 
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        try {
+            File file = FileChooser.selectFile(this);
+            boolean answer = ImportFromExcel.printTable(this.tabStudent, file);
+            if(answer == true){
+                JOptionPane.showMessageDialog(this, "导入成功");
+            } else {
+                JOptionPane.showMessageDialog(this, "导入失败");
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(TmanageStuFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
    
 
     //展示学生信息表        
@@ -868,6 +922,8 @@ public class TmanageStuFrame extends javax.swing.JInternalFrame {
     private javax.swing.JComboBox dept;
     private com.ouc.cpss.util.DateChooserJButton endDate;
     private javax.swing.JComboBox grade;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;

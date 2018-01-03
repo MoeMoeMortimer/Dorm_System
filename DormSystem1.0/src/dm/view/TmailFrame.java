@@ -14,8 +14,11 @@ import dm.vo.Mailcount;
 import dm.po.Student;
 import java.sql.Date;
 import dm.po.User;
+import dm.util.ExportToExcel;
+import dm.util.FileChooser;
 import dm.util.LocationUtil;
 import dm.util.PieChartForMail;
+import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -58,8 +61,13 @@ public class TmailFrame extends javax.swing.JInternalFrame {
         accept = new javax.swing.JButton();
         startDate = new com.ouc.cpss.util.DateChooserJButton();
         endDate = new com.ouc.cpss.util.DateChooserJButton();
+        jButton1 = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setClosable(true);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setIconifiable(true);
+        setMaximizable(true);
+        setResizable(true);
 
         table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -119,6 +127,13 @@ public class TmailFrame extends javax.swing.JInternalFrame {
             }
         });
 
+        jButton1.setText("导出报表");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -129,6 +144,8 @@ public class TmailFrame extends javax.swing.JInternalFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(accept)
                         .addGap(18, 18, 18)
+                        .addComponent(jButton1)
+                        .addGap(27, 27, 27)
                         .addComponent(printChart))
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addGroup(layout.createSequentialGroup()
@@ -159,8 +176,9 @@ public class TmailFrame extends javax.swing.JInternalFrame {
                 .addGap(40, 40, 40)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(printChart)
-                    .addComponent(accept))
-                .addContainerGap(26, Short.MAX_VALUE))
+                    .addComponent(accept)
+                    .addComponent(jButton1))
+                .addContainerGap(30, Short.MAX_VALUE))
         );
 
         pack();
@@ -233,6 +251,16 @@ public class TmailFrame extends javax.swing.JInternalFrame {
     private void tableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableMouseClicked
     this.accept.setEnabled(true);
     }//GEN-LAST:event_tableMouseClicked
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        File file = FileChooser.newFile(this);
+        boolean answer = ExportToExcel.printTableContent(this.table, file);
+        if(answer == true){
+            JOptionPane.showMessageDialog(this, "导出成功");
+        } else {
+            JOptionPane.showMessageDialog(this, "导出失败");
+        } 
+    }//GEN-LAST:event_jButton1ActionPerformed
  public void showOnTable(List<Mail> list){
         //将制定的list数据显示到表上
         //1.获取指定表格（tblProduct）模型
@@ -293,6 +321,7 @@ public class TmailFrame extends javax.swing.JInternalFrame {
     private javax.swing.JButton accept;
     private javax.swing.JComboBox condition;
     private com.ouc.cpss.util.DateChooserJButton endDate;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton printChart;
