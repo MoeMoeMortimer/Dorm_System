@@ -118,7 +118,12 @@ public class TmailFrame extends javax.swing.JInternalFrame {
             }
         });
 
-        condition.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "全部", "按学生", "按到达时间", "按签收时间", " " }));
+        condition.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "全部", "按到达时间", "按签收时间" }));
+        condition.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                conditionActionPerformed(evt);
+            }
+        });
 
         accept.setText("签收");
         accept.addActionListener(new java.awt.event.ActionListener() {
@@ -186,7 +191,7 @@ public class TmailFrame extends javax.swing.JInternalFrame {
 
     private void printChartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printChartActionPerformed
         List<Mailcount> list = new ArrayList<Mailcount>();
-            list = mbiz.findBySidCount();
+        list = mbiz.findBySidCount();
         int i =0;
         HashMap<String,Integer> map = new HashMap<String,Integer>();
         for(Mailcount m :list)
@@ -199,7 +204,7 @@ public class TmailFrame extends javax.swing.JInternalFrame {
             }
             else
             {
-                map.put(m.getSno(),0);
+                map.put(m.getSno(),1);
             }
         }
         PieChartForMail chart = new PieChartForMail("学生快递统计图",map);
@@ -261,6 +266,10 @@ public class TmailFrame extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(this, "导出失败");
         } 
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void conditionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_conditionActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_conditionActionPerformed
  public void showOnTable(List<Mail> list){
         //将制定的list数据显示到表上
         //1.获取指定表格（tblProduct）模型

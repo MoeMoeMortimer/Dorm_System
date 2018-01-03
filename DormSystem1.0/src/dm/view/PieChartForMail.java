@@ -72,6 +72,7 @@ public class PieChartForMail extends JFrame{
             HashMap.Entry entry = (HashMap.Entry) iter.next();
             String key = (String)entry.getKey();
             int val = (int)entry.getValue();
+            
             dataset.setValue(key,val);
         }
         return dataset;
