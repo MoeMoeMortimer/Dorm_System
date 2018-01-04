@@ -62,9 +62,7 @@ public class FixChartBuilder extends JFrame {
     }
 
     private static JFreeChart createJFreeChart(PieDataset dataset) {
-<<<<<<< HEAD
-        
-=======
+
         /**
          * 构建JFreeChart
          */
@@ -78,7 +76,6 @@ public class FixChartBuilder extends JFrame {
         standardChartTheme.setLargeFont(new Font("宋体", Font.PLAIN, 15));
         //应用主题样式   
         ChartFactory.setChartTheme(standardChartTheme);
->>>>>>> a537d2518fdeb2c3ab3e0b0c1cef478dde9179a1
         //与柱状图和折线图不同  
         //createPieChart 2D; createPieChart3D  3D
         JFreeChart chart = ChartFactory.createPieChart("宿舍易损物品统计", dataset, true, true, false);
@@ -91,15 +88,13 @@ public class FixChartBuilder extends JFrame {
         //取得图表显示对象(与柱状图和折线图不同)
         PiePlot plot = (PiePlot) chart.getPlot();
         //设置区块标签的字体==为了防止中文乱码：必须设置字体
-<<<<<<< HEAD
-<<<<<<< HEAD
+
         plot.setLabelFont(new Font("黑体", Font.BOLD, 16));
-=======
+
         plot.setLabelFont(new Font("宋体", Font.BOLD, 22));
->>>>>>> a537d2518fdeb2c3ab3e0b0c1cef478dde9179a1
-=======
+
         plot.setLabelFont(new Font("宋体", Font.BOLD, 22));
->>>>>>> a537d2518fdeb2c3ab3e0b0c1cef478dde9179a1
+
         //图形边框颜色
         plot.setBaseSectionOutlinePaint(Color.BLUE);
         //图形边框粗细
