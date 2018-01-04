@@ -91,8 +91,8 @@ public class MailBizImpl implements MailBiz{
     public List<Mailcount> findBySidCount ()
     {
         String sql = new String();
-        sql = "select Sno,count(*) as Mailcount from Mail group by Sno";
-        return (sdao.query(sql, Mailcount.class));
+        sql = "select Sno,count(*) as Count from Mail group by Sno";
+        return sdao.query(sql, Mailcount.class);
     }
     
     public boolean findBySno(String sno) {
