@@ -92,7 +92,11 @@ public class FixChartBuilder extends JFrame {
         PiePlot plot = (PiePlot) chart.getPlot();
         //设置区块标签的字体==为了防止中文乱码：必须设置字体
 <<<<<<< HEAD
+<<<<<<< HEAD
         plot.setLabelFont(new Font("黑体", Font.BOLD, 16));
+=======
+        plot.setLabelFont(new Font("宋体", Font.BOLD, 22));
+>>>>>>> a537d2518fdeb2c3ab3e0b0c1cef478dde9179a1
 =======
         plot.setLabelFont(new Font("宋体", Font.BOLD, 22));
 >>>>>>> a537d2518fdeb2c3ab3e0b0c1cef478dde9179a1

@@ -485,12 +485,15 @@ public class TfixInfoFrame extends javax.swing.JInternalFrame {
         HashMap<String, Integer> map = new HashMap<String, Integer>();
         for(tFixInfo t : list){
 <<<<<<< HEAD
+<<<<<<< HEAD
             String aname = t.getAname();
             if(map.containsKey(t.getAname())){
                 Integer newint = map.get(aname)+1;
                 map.remove(aname);
                 map.put(aname, newint);
 =======
+=======
+>>>>>>> a537d2518fdeb2c3ab3e0b0c1cef478dde9179a1
             String ano = t.getAname();
             if(map.containsKey(t.getAname())){
                 Integer newint = map.get(ano)+1;
