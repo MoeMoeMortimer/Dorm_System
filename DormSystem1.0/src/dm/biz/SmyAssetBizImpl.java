@@ -24,7 +24,7 @@ public class SmyAssetBizImpl implements SmyAssetBiz {
 
 	@Override
 	public List<SmyAsset> findByCondition(String condition) {
-		String sql = "select * from SmyAsset and concat(Ano, Aname, Dno, Amount) like ?";
+		String sql = "select * from SmyAsset where Ano+Aname+Dno like ?";
 		Object[] params = {"%"+condition+"%"};
 		return adao.query(sql, SmyAsset.class, params);
 	}

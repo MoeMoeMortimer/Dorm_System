@@ -66,7 +66,7 @@ public class TdorAssetFrame extends javax.swing.JInternalFrame {
             }
         });
 
-        item.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "宿舍号", "财产号", "财产名" }));
+        item.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "全部", "宿舍号", "财产号", "财产名", "模糊查询" }));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -114,16 +114,24 @@ public class TdorAssetFrame extends javax.swing.JInternalFrame {
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
         int index = this.item.getSelectedIndex();
         String con = this.txtCondition.getText();
-        if(index==0){
+        if(index==1){
             List<SmyAsset> list = abiz.findById(con);
             showOnTable(list);
         }
-        else if(index==1){
+        else if(index==2){
             List<SmyAsset> list = abiz.findByAId(con);
             showOnTable(list);
         }
-        else if(index==2){
+        else if(index==3){
             List<SmyAsset> list = abiz.findByAname(con);
+            showOnTable(list);
+        }
+        else if(index==0){
+            List<SmyAsset> list = abiz.findAll();
+            showOnTable(list);
+        }
+        else if(index==4){
+            List<SmyAsset> list = abiz.findByCondition(con);
             showOnTable(list);
         }
     }//GEN-LAST:event_btnSearchActionPerformed
