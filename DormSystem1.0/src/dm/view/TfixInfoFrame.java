@@ -484,14 +484,14 @@ public class TfixInfoFrame extends javax.swing.JInternalFrame {
     public HashMap<String, Integer> generateChart(List<tFixInfo> list){
         HashMap<String, Integer> map = new HashMap<String, Integer>();
         for(tFixInfo t : list){
-            String ano = t.getAno();
-            if(map.containsKey(t.getAno())){
-                Integer newint = map.get(ano)+1;
-                map.remove(ano);
-                map.put(ano, newint);
+            String aname = t.getAname();
+            if(map.containsKey(t.getAname())){
+                Integer newint = map.get(aname)+1;
+                map.remove(aname);
+                map.put(aname, newint);
             }
             else {
-                map.put(ano, 1);
+                map.put(aname, 1);
             }
         }
         return map;

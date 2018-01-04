@@ -199,7 +199,7 @@ public class TmailFrame extends javax.swing.JInternalFrame {
             }
             else
             {
-                map.put(m.getSno(),0);
+                map.put(m.getSno(),1);
             }
         }
         PieChartForMail chart = new PieChartForMail("学生快递统计图",map);

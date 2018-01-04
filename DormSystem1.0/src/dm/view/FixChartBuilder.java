@@ -68,7 +68,7 @@ public class FixChartBuilder extends JFrame {
         //创建主题样式     
         StandardChartTheme standardChartTheme = new StandardChartTheme("CN");
         //设置标题字体     
-        standardChartTheme.setExtraLargeFont(new Font("隶书", Font.BOLD, 20));
+        standardChartTheme.setExtraLargeFont(new Font("宋体", Font.BOLD, 20));
         //设置图例的字体    
         standardChartTheme.setRegularFont(new Font("宋书", Font.PLAIN, 15));
         //设置轴向的字体     
@@ -90,7 +90,7 @@ public class FixChartBuilder extends JFrame {
         //取得图表显示对象(与柱状图和折线图不同)
         PiePlot plot = (PiePlot) chart.getPlot();
         //设置区块标签的字体==为了防止中文乱码：必须设置字体
-        plot.setLabelFont(new Font("隶书", Font.BOLD, 22));
+        plot.setLabelFont(new Font("宋体", Font.BOLD, 22));
         //图形边框颜色
         plot.setBaseSectionOutlinePaint(Color.BLUE);
         //图形边框粗细
