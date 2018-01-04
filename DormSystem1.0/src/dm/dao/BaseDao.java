@@ -16,7 +16,7 @@ public class BaseDao {
         ResultSet rs=null;
         try {
 
-        	String driver = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
+            String driver = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
             String url="jdbc:sqlserver://localhost:1433;databaseName=Dorm_System";
             String user="sa";
             String password="0000";

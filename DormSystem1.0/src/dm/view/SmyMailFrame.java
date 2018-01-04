@@ -10,7 +10,7 @@ import dm.biz.MailBizImpl;
 import dm.po.Mail;
 import dm.po.User;
 import dm.util.LocationUtil;
-import dm.util.PieChartForMail;
+import dm.view.PieChartForMail;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -58,7 +58,6 @@ public class SmyMailFrame extends javax.swing.JInternalFrame {
         start = new com.ouc.cpss.util.DateChooserJButton();
         end = new com.ouc.cpss.util.DateChooserJButton();
         jLabel1 = new javax.swing.JLabel();
-        pieChart = new javax.swing.JButton();
 
         setClosable(true);
         setIconifiable(true);
@@ -90,13 +89,6 @@ public class SmyMailFrame extends javax.swing.JInternalFrame {
 
         jLabel1.setText("-");
 
-        pieChart.setText("生成快递年表");
-        pieChart.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                pieChartActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -107,21 +99,16 @@ public class SmyMailFrame extends javax.swing.JInternalFrame {
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(start, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(end, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(72, 72, 72)
-                        .addComponent(cobCondition, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnSearch)
-                        .addGap(21, 21, 21))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(pieChart)
-                        .addContainerGap())))
+                .addComponent(start, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(end, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(72, 72, 72)
+                .addComponent(cobCondition, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnSearch)
+                .addGap(21, 21, 21))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -135,8 +122,7 @@ public class SmyMailFrame extends javax.swing.JInternalFrame {
                     .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(65, 65, 65)
-                .addComponent(pieChart))
+                .addGap(88, 88, 88))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -177,29 +163,6 @@ public class SmyMailFrame extends javax.swing.JInternalFrame {
 
     }//GEN-LAST:event_btnSearchActionPerformed
 
-    private void pieChartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pieChartActionPerformed
-        List<Mail> list = new ArrayList<Mail>();
-        list = mbiz.findAll();
-        int i =0;
-        HashMap<String,Integer> map = new HashMap<String,Integer>();
-        for(Mail m :list)
-        {
-            if(map.containsKey(m.getSno()))
-            {
-                i = map.get(m.getSno());
-                i++;
-                map.put(m.getSno(), i);
-            }
-            else
-            {
-                map.put(m.getSno(),0);
-            }
-        }
-        PieChartForMail chart = new PieChartForMail("学生快递统计图",map);
-        chart.pack();
-        chart.setVisible(true);
-    }//GEN-LAST:event_pieChartActionPerformed
-
     public void showOnTable(List<Mail> list){
         //将制定的list数据显示到表上
         //1.获取指定表格（tblProduct）模型
@@ -228,9 +191,7 @@ public class SmyMailFrame extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JButton pieChart;
     private com.ouc.cpss.util.DateChooserJButton start;
-
     private javax.swing.JTable tblMail;
     // End of variables declaration//GEN-END:variables
 

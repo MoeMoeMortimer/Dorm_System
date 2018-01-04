@@ -56,12 +56,15 @@ public class FixChartBuilder extends JFrame {
         Set<String> keyset = map.keySet();
         for (String s : keyset) {
             //图表数据，名称，横坐标
-            dataset.setValue(s, map.get(s));
+            dataset.setValue(s.trim(), map.get(s));
         }
         return dataset;
     }
 
     private static JFreeChart createJFreeChart(PieDataset dataset) {
+<<<<<<< HEAD
+        
+=======
         /**
          * 构建JFreeChart
          */
@@ -70,27 +73,29 @@ public class FixChartBuilder extends JFrame {
         //设置标题字体     
         standardChartTheme.setExtraLargeFont(new Font("宋体", Font.BOLD, 20));
         //设置图例的字体    
-        standardChartTheme.setRegularFont(new Font("宋书", Font.PLAIN, 15));
+        standardChartTheme.setRegularFont(new Font("宋体", Font.PLAIN, 15));
         //设置轴向的字体     
-        standardChartTheme.setLargeFont(new Font("宋书", Font.PLAIN, 15));
+        standardChartTheme.setLargeFont(new Font("宋体", Font.PLAIN, 15));
         //应用主题样式   
         ChartFactory.setChartTheme(standardChartTheme);
+>>>>>>> a537d2518fdeb2c3ab3e0b0c1cef478dde9179a1
         //与柱状图和折线图不同  
         //createPieChart 2D; createPieChart3D  3D
         JFreeChart chart = ChartFactory.createPieChart("宿舍易损物品统计", dataset, true, true, false);
 
-        //设置标题字体,为了防止中文乱码
-        //chart.setTitle(new TextTitle("宿舍易损物品统计", new Font("黑体", Font.ITALIC, 22)));
-
         //取得统计图标的第一个图例
         LegendTitle legend = chart.getLegend(0);
         //修改图例的字体,必须把显示图片设置为ture,否则会包空指针异常
-        legend.setItemFont(new Font("宋体", Font.BOLD, 20));
+        legend.setItemFont(new Font("宋体", Font.BOLD, 16));
 
         //取得图表显示对象(与柱状图和折线图不同)
         PiePlot plot = (PiePlot) chart.getPlot();
         //设置区块标签的字体==为了防止中文乱码：必须设置字体
+<<<<<<< HEAD
+        plot.setLabelFont(new Font("黑体", Font.BOLD, 16));
+=======
         plot.setLabelFont(new Font("宋体", Font.BOLD, 22));
+>>>>>>> a537d2518fdeb2c3ab3e0b0c1cef478dde9179a1
         //图形边框颜色
         plot.setBaseSectionOutlinePaint(Color.BLUE);
         //图形边框粗细
@@ -114,7 +119,7 @@ public class FixChartBuilder extends JFrame {
         plot.setSectionPaint(1, Color.BLACK);
         //饼状图标签显示百分比 :自定义,{0}表示选项,{1}表示数值,{2}表示所占比例,小数点后两位
         plot.setLabelGenerator(new StandardPieSectionLabelGenerator(
-                "{0}:{1}\r\n{2}", NumberFormat.getNumberInstance(), new DecimalFormat("0.00%")));
+                "{0}：{1}\r\n{2}", NumberFormat.getNumberInstance(), new DecimalFormat("0.00%")));
 
         //图例显示百分比
         plot.setLegendLabelGenerator(new StandardPieSectionLabelGenerator("{0}={2}"));

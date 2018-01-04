@@ -17,7 +17,7 @@ import dm.po.User;
 import dm.util.ExportToExcel;
 import dm.util.FileChooser;
 import dm.util.LocationUtil;
-import dm.util.PieChartForMail;
+import dm.view.PieChartForMail;
 import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -232,8 +232,8 @@ public class TmailFrame extends javax.swing.JInternalFrame {
 
     private void acceptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_acceptActionPerformed
     java.util.Date date=new java.util.Date();
-    DateFormat format=new SimpleDateFormat("yyyy-mm-dd");
-    String time=format.format(date);
+    DateFormat df1 = DateFormat.getDateInstance();
+    String time=df1.format(date);
     int row = this.table.getSelectedRow();
     String Mno = this.table.getValueAt(row,0)+"";
     String Sno = this.table.getValueAt(row,1)+"";
