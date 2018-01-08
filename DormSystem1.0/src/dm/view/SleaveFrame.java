@@ -59,7 +59,6 @@ public class SleaveFrame extends javax.swing.JInternalFrame {
         start = new com.ouc.cpss.util.DateChooserJButton();
         end = new com.ouc.cpss.util.DateChooserJButton();
         exp = new javax.swing.JButton();
-        imp = new javax.swing.JButton();
 
         setClosable(true);
         setIconifiable(true);
@@ -92,13 +91,6 @@ public class SleaveFrame extends javax.swing.JInternalFrame {
             }
         });
 
-        imp.setText("从excel导入");
-        imp.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                impActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -120,8 +112,6 @@ public class SleaveFrame extends javax.swing.JInternalFrame {
                         .addComponent(btnSearch)
                         .addGap(49, 49, 49))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(imp)
-                        .addGap(35, 35, 35)
                         .addComponent(exp)
                         .addGap(79, 79, 79))))
         );
@@ -137,9 +127,7 @@ public class SleaveFrame extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(31, 31, 31)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(exp)
-                    .addComponent(imp))
+                .addComponent(exp)
                 .addGap(77, 77, 77))
         );
 
@@ -187,16 +175,6 @@ public class SleaveFrame extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(this, "导出失败");
         }
     }//GEN-LAST:event_expActionPerformed
-
-    private void impActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_impActionPerformed
-        File file = FileChooser.selectFile(this);
-        boolean answer = false; 
-        try {
-            answer = ImportFromExcel.printTable(this.tbl, file); 
-        } catch (IOException ex) {
-            Logger.getLogger(SleaveFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_impActionPerformed
         
 
     public void showOnTable(List<LeaveSchool> list){
@@ -226,7 +204,6 @@ public class SleaveFrame extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnSearch;
     private com.ouc.cpss.util.DateChooserJButton end;
     private javax.swing.JButton exp;
-    private javax.swing.JButton imp;
     private javax.swing.JComboBox item;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;

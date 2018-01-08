@@ -3,18 +3,30 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/D:/Dorm_System/DormSystem1.0/src/dm/view/FixChartBuilder.java</file>
             <file>file:/D:/Dorm_System/DormSystem1.0/src/dm/view/SmyDormFrame.java</file>
-            <file>file:/D:/Dorm_System/DormSystem1.0/src/dm/view/StudentFrame.java</file>
-            <file>file:/D:/Dorm_System/DormSystem1.0/src/dm/biz/AssetBizImpl.java</file>
             <file>file:/D:/Dorm_System/DormSystem1.0/src/dm/view/TdorAssetFrame.java</file>
+            <file>file:/D:/Dorm_System/DormSystem1.0/src/dm/dao/BaseDao.java</file>
             <file>file:/D:/Dorm_System/DormSystem1.0/src/dm/biz/StudentBizImpl.java</file>
-            <file>file:/D:/Dorm_System/DormSystem1.0/src/dm/view/SfixFrame.java</file>
-            <file>file:/D:/Dorm_System/DormSystem1.0/src/dm/view/TmailFrame.java</file>
+            <file>file:/D:/Dorm_System/DormSystem1.0/src/dm/view/TstuLeaveFrame.java</file>
+            <file>file:/D:/Dorm_System/DormSystem1.0/src/dm/biz/tStuLeaveBizImpl.java</file>
             <file>file:/D:/Dorm_System/DormSystem1.0/src/dm/view/TfixInfoFrame.java</file>
+            <file>file:/D:/Dorm_System/DormSystem1.0/src/dm/view/PieChartForMail.java</file>
             <file>file:/D:/Dorm_System/DormSystem1.0/src/dm/biz/AssetBiz.java</file>
+            <file>file:/D:/Dorm_System/DormSystem1.0/src/dm/util/ImportFromExcel.java</file>
+            <file>file:/D:/Dorm_System/DormSystem1.0/src/dm/view/SleaveFrame.java</file>
             <file>file:/D:/Dorm_System/DormSystem1.0/src/dm/view/TmanageStuFrame.java</file>
             <file>file:/D:/Dorm_System/DormSystem1.0/src/dm/biz/StudentBiz.java</file>
             <file>file:/D:/Dorm_System/DormSystem1.0/src/dm/view/TeacherFrame.java</file>
+            <file>file:/D:/Dorm_System/DormSystem1.0/src/dm/view/StudentFrame.java</file>
+            <file>file:/D:/Dorm_System/DormSystem1.0/src/dm/biz/AssetBizImpl.java</file>
+            <file>file:/D:/Dorm_System/DormSystem1.0/src/dm/biz/tStuCurfewBizImpl.java</file>
+            <file>file:/D:/Dorm_System/DormSystem1.0/src/dm/view/TstuCurfewFrame.java</file>
+            <file>file:/D:/Dorm_System/DormSystem1.0/src/dm/view/SfixFrame.java</file>
+            <file>file:/D:/Dorm_System/DormSystem1.0/src/dm/util/ExportToExcel.java</file>
+            <file>file:/D:/Dorm_System/DormSystem1.0/src/dm/view/TmailFrame.java</file>
+            <file>file:/D:/Dorm_System/DormSystem1.0/src/dm/view/SmyMailFrame.java</file>
+            <file>file:/D:/Dorm_System/DormSystem1.0/src/dm/biz/SmyAssetBizImpl.java</file>
         </group>
     </open-files>
 </project-private>
